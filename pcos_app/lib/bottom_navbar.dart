@@ -1,3 +1,4 @@
+// bottom_navbar.dart
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -13,16 +14,16 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: currentIndex, // Menunjukkan item yang dipilih
-      onTap: onTap, // Fungsi untuk menangani tap
+      currentIndex: currentIndex,
+      onTap: onTap, // Kirim ke parent aja
       selectedItemColor: Colors.pink[400],
       unselectedItemColor: Colors.grey[600],
       backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Pengaturan',
+          icon: Icon(Icons.home),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
