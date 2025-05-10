@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pcos_app/splash_wrapper.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'bottom_navbar.dart';
-import 'profil_home.dart';
+import 'Tanggal_haid.dart'; // ← Pastikan ini sudah di-import
 import 'riwayat.dart';
 import 'tentang.dart';
 import 'prediksi_page.dart';
@@ -13,7 +14,10 @@ import 'notif_page.dart';
 import 'bmi_page.dart';
 import 'profile_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting(
+      'id_ID', null); // ← Inisialisasi lokal Bahasa Indonesia
   runApp(const MyApp());
 }
 
@@ -45,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    HomePage(), // Halaman awal kamu
+    const HomePage(),
     NotifPage(),
     BMICalculatorPage(),
     ProfilePage(),
@@ -111,8 +115,8 @@ class HomePage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFFFE4E1), // Pink muda
-            Color.fromARGB(255, 255, 83, 112), // Pink tua
+            Color(0xFFFFE4E1),
+            Color.fromARGB(255, 255, 83, 112),
           ],
         ),
       ),
@@ -122,7 +126,6 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔽 Judul & Logout di baris yang sama
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -152,7 +155,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              const ProfileAvatar(),
+              const TanggalHaid(), // ← ini ganti ProfileAvatar
               const SizedBox(height: 24),
               const RiwayatBar(),
               const SizedBox(height: 16),
