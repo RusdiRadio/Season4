@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pcos_app/splash_wrapper.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'bottom_navbar.dart';
 import 'Tanggal_haid.dart'; // ← Pastikan ini sudah di-import
@@ -32,6 +33,16 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
       ),
+      // Tambahkan ini:
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('id', 'ID'),
+        Locale('en', 'US'),
+      ],
       home: const SplashWrapper(),
       debugShowCheckedModeBanner: false,
     );
