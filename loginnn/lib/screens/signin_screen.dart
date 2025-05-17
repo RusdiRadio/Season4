@@ -44,7 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Welcome back',
+                        'Login',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,

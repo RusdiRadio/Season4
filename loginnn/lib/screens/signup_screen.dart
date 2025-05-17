@@ -45,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       // get started text
                       Text(
-                        'Get Started',
+                        'Register',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
