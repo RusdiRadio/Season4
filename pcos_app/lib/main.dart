@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'bottom_navbar.dart';
-import 'Tanggal_haid.dart'; // ← Pastikan ini sudah di-import
+import 'Tanggal_haid.dart';
 import 'riwayat.dart';
 import 'tentang.dart';
 import 'prediksi_page.dart';
@@ -17,8 +17,7 @@ import 'profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting(
-      'id_ID', null); // ← Inisialisasi lokal Bahasa Indonesia
+  await initializeDateFormatting('id_ID', null);
   runApp(const MyApp());
 }
 
@@ -33,7 +32,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
       ),
-      // Tambahkan ini:
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -75,52 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavTapped,
-      ),
-      floatingActionButton: _selectedIndex == 0
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 70),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.85,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => const PrediksiPage(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
-                  },
-                  label: const Text(
-                    "Ayo cek sekarang!",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  backgroundColor: const Color(0xFFF06A8D),
-                  elevation: 4,
-                ),
-              ),
-            )
-          : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -131,49 +84,94 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      child: SingleChildScrollView(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'OvaSafe',
-                          style: GoogleFonts.arimo(
-                            fontSize: 24,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavBar(
+          currentIndex: _selectedIndex,
+          onTap: _onNavTapped,
+        ),
+        floatingActionButton: _selectedIndex == 0
+            ? Padding(
+                padding: const EdgeInsets.only(bottom: 70),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const PrediksiPage(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
+                    label: const Text(
+                      "Ayo cek sekarang!",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    backgroundColor: const Color(0xFFF06A8D),
+                    elevation: 4,
+                  ),
+                ),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'OvaSafe',
+                        style: GoogleFonts.arimo(
+                          fontSize: 24,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.logout, color: Colors.white),
-                      onPressed: () {
-                        print("Logout ditekan");
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    onPressed: () {
+                      print("Logout ditekan");
+                    },
+                  ),
+                ],
               ),
-              const TanggalHaid(), // ← ini ganti ProfileAvatar
-              const SizedBox(height: 24),
-              const RiwayatBar(),
-              const SizedBox(height: 16),
-              const TentangPCOSBar(),
-              const SizedBox(height: 100),
-            ],
-          ),
+            ),
+            const TanggalHaid(),
+            const SizedBox(height: 24),
+            const RiwayatBar(),
+            const SizedBox(height: 16),
+            const TentangPCOSBar(),
+            const SizedBox(height: 100),
+          ],
         ),
       ),
     );

@@ -7,6 +7,6 @@ class SplashWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Di sini kamu bisa ganti logika login cek dari SharedPreferences nanti
-    return const LoginScreen();
+    return const WelcomeScreen();
   }
 }
