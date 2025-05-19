@@ -11,7 +11,7 @@
       <li class="breadcrumb-item active">Dashboard</li>
     </ol>
   </nav>
-</div>
+</div><!-- End Page Title -->
 
 <section class="section dashboard">
   <div class="row">
@@ -42,7 +42,7 @@
             <h5 class="card-title">Riwayat Diagnosa</h5>
             <div class="d-flex align-items-center">
               <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                <i class="bi bi-file-medical" style="color: black;"></i>
+                <i class="bi bi-file-medical text-primary"></i>
               </div>
               <div class="ps-3">
                 <h6>10</h6>
@@ -76,7 +76,7 @@
             <h5 class="card-title">Tidak Terindikasi</h5>
             <div class="d-flex align-items-center">
               <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                <i class="bi bi-heart-fill"></i>
+                <i class="bi bi-heart-fill text-success"></i>
               </div>
               <div class="ps-3">
                 <h6>10</h6>
@@ -87,7 +87,7 @@
       </div>
     </div><!-- End Info Cards -->
 
-    <!-- Chart and News -->
+        <!-- Chart and News -->
 
     <div class="row">
       <!-- Bar Chart -->
@@ -161,49 +161,29 @@
           </div>
         </div>
 
-      <!-- News & Updates -->
+      <!-- Edukasi & Info -->
       <div class="col-lg-6">
         <div class="card">
-          
           <div class="card-body pb-0">
-            <h5 class="card-title">Edukasi &amp; Info PCOS </h5>
+            <h5 class="card-title">Edukasi &amp; Info PCOS</h5>
             <div class="news">
-
-            <div class="post-item clearfix">
-            <img src="assets/img/edu1.jpg" alt="">
-            <h4><a href="#">Kenali Gejala Awal PCOS</a></h4>
-            <p>PCOS dapat dikenali dari menstruasi tidak teratur, jerawat berlebihan, dan rambut tumbuh di area yang tidak biasa. Deteksi dini penting untuk penanganan tepat.</p>
-          </div>
-
-          <div class="post-item clearfix">
-                <img src="assets/img/olahraga.webp" alt="">
-                <h4><a href="#">Manfaat Olahraga Rutin untuk Penderita PCOS</a></h4>
-                <p>Aktivitas fisik teratur membantu menyeimbangkan hormon dan meningkatkan sensitivitas insulin pada penderita PCOS.</p>
-              </div>
-
-              <div class="post-item clearfix">
-                <img src="assets/img/edu2.jpg" alt="">
-                <h4><a href="#">Pola Makan Sehat yang Disarankan</a></h4>
-                <p>Konsumsi makanan rendah karbohidrat, tinggi serat, serta menghindari fast food dapat memperbaiki kondisi tubuh penderita PCOS.</p>
-              </div>
-
-              <div class="post-item clearfix">
-                <img src="assets/img/edu3.png" alt="">
-                <h4><a href="#">PCOS dan Hubungannya dengan Kesuburan</a></h4>
-                <p>PCOS dapat menyebabkan gangguan ovulasi, namun dengan pengobatan dan perubahan gaya hidup, peluang kehamilan tetap ada.</p>
-              </div>
-
-              <div class="post-item clearfix">
-                <img src="assets/img/edu4.png" alt="">
-                <h4><a href="#">Cara Mengelola Stres pada Penderita PCOS</a></h4>
-                <p>Stres memicu ketidakseimbangan hormon. Teknik relaksasi seperti yoga atau meditasi efektif membantu manajemen stres.</p>
-              </div>
+              @if($edukasi->count() > 0)
+                @foreach ($edukasi as $item)
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('storage/images/' . $item->konten) }}" alt="{{ $item->judul }}" style="max-height: 70px;">
+                    <h4><a href="#">{{ $item->judul }}</a></h4>
+                    <p>{{ Str::limit($item->deskripsi, 100, '...') }}</p>
+                  </div>
+                @endforeach
+              @else
+                <p>Tidak ada informasi edukasi tersedia saat ini.</p>
+              @endif
             </div>
           </div>
         </div>
       </div>
-    </div><!-- End Chart and News -->
 
+    </div><!-- End row -->
   </div>
 </section>
 @endsection
