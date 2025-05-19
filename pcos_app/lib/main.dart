@@ -156,12 +156,6 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.logout, color: Colors.white),
-                    onPressed: () {
-                      print("Logout ditekan");
-                    },
-                  ),
                 ],
               ),
             ),

@@ -75,24 +75,30 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Widget _buildProfileItem(String hint, TextEditingController controller, IconData icon,
+  Widget _buildProfileItem(
+      String hint, TextEditingController controller, IconData icon,
       {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFDA8CF), Color(0xFFFDA1FF)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white),
-            const SizedBox(width: 12),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Icon(icon, color: Colors.white),
+            ),
             Expanded(
               child: _isEditing
                   ? TextField(
@@ -102,12 +108,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: hint,
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: const TextStyle(color: Colors.white70),
                       ),
                     )
-                  : Text(
-                      controller.text,
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        controller.text,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
             ),
           ],
@@ -119,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // supaya background juga di bawah AppBar
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -135,7 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Stack(
         children: [
-          // Background gradient
           const SizedBox.expand(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -143,14 +152,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFFFFE4E1), // Pink muda
-                    Color.fromARGB(255, 255, 83, 112), // Pink tua
+                    Color(0xFFFFE4E1),
+                    Color.fromARGB(255, 255, 83, 112),
                   ],
                 ),
               ),
             ),
           ),
-          // Konten utama
           SingleChildScrollView(
             child: Column(
               children: [
@@ -165,7 +173,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           radius: 60,
                           backgroundImage: _profileImage != null
                               ? FileImage(_profileImage!)
-                              : const AssetImage("assets/images/profile.png") as ImageProvider,
+                              : const AssetImage("assets/images/profile.png")
+                                  as ImageProvider,
                         ),
                         if (_isEditing)
                           Positioned(
@@ -174,7 +183,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 18,
-                              child: const Icon(Icons.camera_alt, color: Colors.pink, size: 20),
+                              child: const Icon(Icons.camera_alt,
+                                  color: Colors.pink, size: 20),
                             ),
                           ),
                       ],
@@ -184,7 +194,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 10),
                 Text(
                   _namaPenggunaController.text,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 5),
@@ -200,13 +213,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: _toggleEdit,
                   ),
                 if (_isEditing) ...[
-                  _buildProfileItem("Nama Pengguna", _namaPenggunaController, Icons.alternate_email),
-                  _buildProfileItem("Nama Lengkap", _namaController, Icons.person),
+                  _buildProfileItem("Nama Pengguna", _namaPenggunaController,
+                      Icons.alternate_email),
+                  _buildProfileItem(
+                      "Nama Lengkap", _namaController, Icons.person),
                   _buildProfileItem("Usia", _usiaController, Icons.cake),
-                  _buildProfileItem("Tanggal Lahir", _tanggalLahirController, Icons.event),
-                  _buildProfileItem("Alamat", _alamatController, Icons.location_on),
+                  _buildProfileItem(
+                      "Tanggal Lahir", _tanggalLahirController, Icons.event),
+                  _buildProfileItem(
+                      "Alamat", _alamatController, Icons.location_on),
                   _buildProfileItem("Nomor HP", _noHpController, Icons.phone),
-                  _buildProfileItem("Kata Sandi", _passwordController, Icons.lock, obscureText: true),
+                  _buildProfileItem(
+                      "Kata Sandi", _passwordController, Icons.lock,
+                      obscureText: true),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () async {
@@ -220,10 +239,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.pink,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
-                    child: const Text("Simpan", style: TextStyle(color: Colors.white)),
+                    child: const Text("Simpan",
+                        style: TextStyle(color: Colors.white)),
                   ),
                   const SizedBox(height: 16),
                 ],

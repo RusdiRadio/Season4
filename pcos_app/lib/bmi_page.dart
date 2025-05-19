@@ -56,80 +56,109 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: const Text("Kalkulator BMI"),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          foregroundColor: Colors.white,
-        ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                // Input Field for Height
-                _buildTextField(
-                    _heightController, 'Tinggi badan (cm)', Icons.height),
-
-                const SizedBox(height: 16),
-
-                // Input Field for Weight
-                _buildTextField(_weightController, 'Berat badan (kg)',
-                    Icons.fitness_center),
-
-                const SizedBox(height: 24),
-
-                // BMI Calculate Button
-                ElevatedButton(
-                  onPressed: _calculateBMI,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF06A8D),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          30), // Rounded corners for button
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                  ),
-                  child: Text(
-                    'Hitung BMI',
-                    style: GoogleFonts.poppins(
-                        fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Display Result
-                if (_bmiResult != null)
-                  Column(
-                    children: [
-                      Text(
-                        "BMI kamu: ${_bmiResult!.toStringAsFixed(2)}",
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+          child: Column(
+            children: [
+              // Custom AppBar
+              Container(
+                height: 56,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                alignment: Alignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Status: $_status",
+                    ),
+                    Center(
+                      child: Text(
+                        'Kalkulator BMI',
                         style: GoogleFonts.poppins(
                           fontSize: 20,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content Scrollable
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      // Input Field for Height
+                      _buildTextField(
+                          _heightController, 'Tinggi badan (cm)', Icons.height),
+
+                      const SizedBox(height: 16),
+
+                      // Input Field for Weight
+                      _buildTextField(_weightController, 'Berat badan (kg)',
+                          Icons.fitness_center),
+
+                      const SizedBox(height: 24),
+
+                      // BMI Calculate Button
+                      ElevatedButton(
+                        onPressed: _calculateBMI,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF06A8D),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 24),
+                        ),
+                        child: Text(
+                          'Hitung BMI',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Display Result
+                      if (_bmiResult != null)
+                        Column(
+                          children: [
+                            Text(
+                              "BMI kamu: ${_bmiResult!.toStringAsFixed(2)}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Status: $_status",
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (_status.isNotEmpty)
+                        Text(
+                          _status,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                     ],
-                  )
-                else if (_status.isNotEmpty)
-                  Text(
-                    _status,
-                    style: const TextStyle(color: Colors.white),
                   ),
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
