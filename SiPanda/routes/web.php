@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EdukasiController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
 
 
 
@@ -32,28 +33,25 @@ Route::get('/index', function () {
 
 
 // route register
-Route::get('/register', function () {
-    return view('layouts.register');
-})->name('register');
-
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-
+Route::post('/register', [RegisterController::class, 'register']);
 
 //route login
-Route::get('/login', function () {
-    return view('layouts.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
-Route::get('/login', function () {
-    return view('layouts.login');
-})->name('login');
+Route::post('/login', [LoginController::class, 'login']);
 
-
-
-// route dashboard
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->middleware('auth')->name('dashboard');
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+// // route dashboard
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->name('dashboard');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -68,14 +66,14 @@ Route::get('/Riwayat', function () {
     return view('Riwayat');
 })->name('Riwayat');
 
-// route Edukasi
-Route::get('/Edukasi', function () {
-    return view('Edukasi');
-})->name('Edukasi');
 
+// route Edukasi
 Route::get('/edukasi', [EdukasiController::class, 'index'])->name('edukasi');
-Route::get('/EditEdukasi', [EdukasiController::class, 'edit'])->name('EditEdukasi');
 Route::get('/tambahedukasi', [EdukasiController::class, 'tambah'])->name('tambahedukasi');
+Route::post('/tambahedukasi/store', [EdukasiController::class, 'store'])->name('tambahedukasi.store');
+Route::get('/EditEdukasi/{id}', [EdukasiController::class, 'edit'])->name('EditEdukasi');
+Route::put('/UpdateEdukasi/{id}', [EdukasiController::class, 'update'])->name('UpdateEdukasi');
+Route::get('/hapusedukasi/{id}', [EdukasiController::class, 'destroy'])->name('HapusEdukasi');
 
 
 

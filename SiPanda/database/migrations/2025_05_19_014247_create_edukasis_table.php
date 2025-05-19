@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('edukasi', function (Blueprint $table) {
-    $table->id();
-    $table->string('judul');
-    $table->string('konten'); // untuk nama file gambar
-    $table->text('deskripsi');
-    $table->date('tanggal_buat');
-    $table->timestamps();
-     });
+        Schema::create('edukasis', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('edukasis');
     }
 };

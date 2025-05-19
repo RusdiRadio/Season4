@@ -37,7 +37,7 @@
 
       
       <li class="nav-item">
-      <a class="nav-link {{ request()->routeIs('Edukasi') ? 'active' : 'collapsed' }}" href="{{ route('Edukasi') }}">
+      <a class="nav-link {{ request()->routeIs('edukasi') ? 'active' : 'collapsed' }}" href="{{ route('edukasi') }}">
       <i class="bi bi-book"></i>
           <span>Manajemen Edukasi </span>
         </a>

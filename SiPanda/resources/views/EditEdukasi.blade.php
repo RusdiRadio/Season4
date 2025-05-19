@@ -20,34 +20,44 @@
         <h5 class="card-title">Form Edit Edukasi</h5>
 
         <!-- Vertical Form -->
-        <form class="row g-3" method="POST" action="#" enctype="multipart/form-data">
-          @csrf
-          <div class="col-12">
-            <label for="judul" class="form-label">Judul</label>
-            <input type="text" class="form-control" id="judul" name="judul" placeholder="Masukkan judul">
-          </div>
+       <form class="row g-3" method="POST" action="{{ route('UpdateEdukasi', $edukasi->id) }}" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-          <div class="col-12">
-            <label for="deskripsi" class="form-label">Deskripsi</label>
-            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Tuliskan deskripsi..."></textarea>
-          </div>
 
-          <div class="col-12">
-            <label for="tanggal" class="form-label">Tanggal Buat</label>
-            <input type="date" class="form-control" id="tanggal" name="tanggal">
-          </div>
-
-          <div class="col-12">
-            <label for="foto" class="form-label">Upload Gambar (Opsional)</label>
-            <input class="form-control" type="file" id="foto" name="foto" accept="image/*">
-          </div>
-
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('edukasi') }}'">Reset</button>
-            </div>
-        </form>
+      <div class="col-12">
+        <label for="id" class="form-label">Id</label>
+        <input type="text" class="form-control" id="id" name="id" value="{{ $edukasi->id }}" readonly>
       </div>
+
+      <div class="col-12">
+        <label for="judul" class="form-label">Judul</label>
+        <input type="text" class="form-control" id="judul" name="judul" value="{{ $edukasi->judul }}">
+      </div>
+
+      <div class="col-12">
+        <label for="konten" class="form-label">Konten <small>(Ganti jika ingin mengubah)</small></label>
+        <input class="form-control" type="file" id="konten" name="konten">
+        <small>File saat ini: {{ $edukasi->konten }}</small>
+      </div>
+
+      <div class="col-12">
+        <label for="deskripsi" class="form-label">Deskripsi</label>
+        <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3">{{ $edukasi->deskripsi }}</textarea>
+      </div>
+
+      <div class="col-12">
+        <label for="tanggal" class="form-label">Tanggal Buat</label>
+        <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($edukasi->tanggal)->format('Y-m-d') }}">
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{{ route('edukasi') }}" class="btn btn-secondary">Kembali</a>
+      </div>
+    </form>
+
+          </div>
     </div>
   </div>
 </section>
