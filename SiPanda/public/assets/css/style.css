@@ -624,7 +624,7 @@ textarea::placeholder {
   font-size: 18px;
   margin-bottom: 0;
   font-weight: 600;
-  color: #444444;
+  color: #f0afbf;
 }
 
 .header-nav .profile .dropdown-header span {
@@ -955,12 +955,12 @@ textarea::placeholder {
 }
 
 .dashboard .news h4 a {
-  color: #012970;
+  color: #f0afbf;
   transition: 0.3s;
 }
 
 .dashboard .news h4 a:hover {
-  color: #4154f1;
+  color: #f0afbf;
 }
 
 .dashboard .news p {
@@ -1058,7 +1058,7 @@ textarea::placeholder {
 .profile .profile-card h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #2c384e;
+  color: #f0afbf;
   margin: 10px 0 0 0;
 }
 
@@ -1069,14 +1069,14 @@ textarea::placeholder {
 .profile .profile-card .social-links a {
   font-size: 20px;
   display: inline-block;
-  color: rgba(1, 41, 112, 0.5);
+  color: #f0afbf;
   line-height: 0;
   margin-right: 10px;
   transition: 0.3s;
 }
 
 .profile .profile-card .social-links a:hover {
-  color: #012970;
+  color: #0f0d0d;
 }
 
 .profile .profile-overview .row {
@@ -1085,17 +1085,17 @@ textarea::placeholder {
 }
 
 .profile .profile-overview .card-title {
-  color: #012970;
+  color: #111011;
 }
 
 .profile .profile-overview .label {
   font-weight: 600;
-  color: rgba(1, 41, 112, 0.6);
+  color: #f0afbf;
 }
 
 .profile .profile-edit label {
   font-weight: 600;
-  color: rgba(1, 41, 112, 0.6);
+  color: #f0afbf;
 }
 
 .profile .profile-edit img {

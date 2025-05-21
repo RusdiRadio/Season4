@@ -21,7 +21,9 @@
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
               <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-              <h2>Wayan</h2>
+              @php $user = auth()->user(); @endphp
+
+              <h2>{{ $user->nama }}</h2>
               <h3>Petugas Puskesmas</h3>
               <!-- <div class="social-links mt-2">
                 <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
@@ -61,15 +63,21 @@
               <div class="tab-content pt-2">
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  <h5 class="card-title">Tentang</h5>
-                  <p class="small fst-italic">Saya adalah seorang petugas Puskesmas</p>
 
                   <h5 class="card-title">Profile Details</h5>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Nama</div>
-                    <div class="col-lg-9 col-md-8">I wayan</div>
+                  <div class="col-lg-3 col-md-4 label">Nama</div>
+
+                  <div class="col-lg-9 col-md-8">
+                    @if(Auth::check())
+                      {{ Auth::user()->nama }}
+                    @else
+                      <em>Belum login</em>
+                    @endif
                   </div>
+                </div>
+
 
                   <!-- <div class="row">
                     <div class="col-lg-3 col-md-4 label">Company</div>
@@ -78,12 +86,12 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Pekerjaan</div>
-                    <div class="col-lg-9 col-md-8">Petugas Puskesmas</div>
+                    <div class="col-lg-9 col-md-8"> </div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Alamat</div>
-                    <div class="col-lg-9 col-md-8">Bali</div>
+                    <div class="col-lg-9 col-md-8"> </div>
                   </div>
 
                   <!-- <div class="row">
@@ -93,122 +101,90 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Phone</div>
-                    <div class="col-lg-9 col-md-8">08937293047</div>
+                    <div class="col-lg-9 col-md-8"></div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">wayan@gmail.com</div>
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">
+                    @if(Auth::check())
+                      {{ Auth::user()->email }}
+                    @else
+                      <em>Belum login</em>
+                    @endif
                   </div>
-
+                </div>
                 </div>
 
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form>
-                    <div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                      <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
-                        <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                      <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="row mb-3">
+                          <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                          <div class="col-md-8 col-lg-9">
+                      <img src="{{ Auth::check() && Auth::user()->foto ? asset('storage/profile/' . Auth::user()->foto) : asset('assets/img/profile-img.jpg') }}" alt="Profile" class="img-thumbnail" width="150">
+
+                            <div class="pt-2">
+                              <input type="file" name="image" id="image" accept="image/*" style="display: none;" onchange="document.getElementById('profileForm').submit();">
+                              <label for="image" class="btn btn-primary btn-sm" title="Upload new profile image" style="cursor:pointer;">
+                                <i class="bi bi-upload"></i>
+                              </label>
+
+                            @if(Auth::check() && Auth::user()->foto)
+                              <button type="submit" name="delete_photo" value="1" class="btn btn-danger btn-sm" title="Remove my profile image" onclick="return confirm('Yakin ingin menghapus foto profil?')">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                              @endif
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
 
-                    <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nama</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
-                      </div>
-                    </div>
+                        <div class="row mb-3">
+                          <label class="col-lg-3 col-md-4 col-form-label">Nama</label>
+                          <div class="col-lg-9 col-md-8">
+                            <input type="text" class="form-control" value="{{ Auth::guard('admin')->user()->nama }}" readonly>
+                          </div>
+                        </div>
 
-                    <div class="row mb-3">
-                      <label for="about" class="col-md-4 col-lg-3 col-form-label">Tentang</label>
-                      <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about" style="height: 100px"></textarea>
-                      </div>
-                    </div>
+                        <div class="row mb-3">
+                          <label class="col-lg-3 col-md-4 col-form-label" for="pekerjaan">Pekerjaan</label>
+                          <div class="col-lg-9 col-md-8">
+                            <input type="text" name="pekerjaan" id="pekerjaan" class="form-control" value="{{ old('pekerjaan', Auth::guard('admin')->user()->pekerjaan) }}">
+                          </div>
+                        </div>
 
-                    <!-- <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
-                      </div>
-                    </div> -->
+                        <div class="row mb-3">
+                          <label class="col-lg-3 col-md-4 col-form-label" for="alamat">Alamat</label>
+                          <div class="col-lg-9 col-md-8">
+                            <textarea name="alamat" id="alamat" class="form-control">{{ old('alamat', Auth::guard('admin')->user()->alamat) }}</textarea>
+                          </div>
+                        </div>
 
-                    <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Pekerjaan</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="">
-                      </div>
-                    </div>
+                        <div class="row mb-3">
+                          <label class="col-lg-3 col-md-4 col-form-label" for="no_hp">No HP</label>
+                          <div class="col-lg-9 col-md-8">
+                            <input type="text" name="no_hp" id="no_hp" class="form-control" value="{{ old('no_hp', Auth::guard('admin')->user()->no_hp) }}">
+                          </div>
+                        </div>
 
-                    <div class="row mb-3">
-                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">Alamat</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="country" type="text" class="form-control" id="Country" value="">
-                      </div>
-                    </div>
+                        <div class="row mb-3">
+                          <label class="col-lg-3 col-md-4 col-form-label">Email</label>
+                          <div class="col-lg-9 col-md-8">
+                            <input type="email" class="form-control" value="{{ Auth::guard('admin')->user()->email }}" readonly>
+                          </div>
+                        </div>
 
-                    <!-- <div class="row mb-3">
-                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
-                      </div>
-                    </div> -->
-
-                    <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="">
-                      </div>
-                    </div>
-
-                    <!-- <div class="row mb-3">
-                      <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
-                      </div>
-                    </div> -->
-
-                    <!-- <div class="row mb-3">
-                      <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
-                      </div> -->
-                    </div>
-
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                  </form><!-- End Profile Edit Form -->
-
+                        <div class="row mb-3">
+                          <div class="col-lg-9 col-md-8 offset-lg-3 offset-md-4">
+                            <button type="submit" class="btn btn-primary">Update Profil</button>
+                          </div>
+                        </div>
+                      </form>
                 </div>
-
                 <div class="tab-pane fade pt-3" id="profile-settings">
 
                   <!-- Settings Form -->

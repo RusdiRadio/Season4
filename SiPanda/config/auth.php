@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
     ],
 
     /*
@@ -65,6 +70,10 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
+         'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class, // pastikan modelnya sesuai
+    ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

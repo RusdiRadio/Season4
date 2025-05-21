@@ -24,16 +24,10 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
-// Logout (POST!)
+// Logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::middleware(['auth','prevent-back-history'])->group(function(){
-    Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
-    // … route lain …
-});
 
-
-
-// Semua route berikut wajib login dan tidak boleh di‐cache (prevent back history)
+// Semua route berikut wajib login dan tidak boleh di‐cache
 Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
     // Dashboard
@@ -61,5 +55,11 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
     // Cetak Data
     Route::get('/cetakData', fn() => view('cetakData'))->name('cetakData');
+
+    Route::get('/admin/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
+    Route::post('/admin/profile/upload', [AdminProfileController::class, 'upload'])->name('profile.upload');
+    Route::delete('/admin/profile/delete', [AdminProfileController::class, 'delete'])->name('profile.delete');
+    Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+
 
 });
