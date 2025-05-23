@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EdukasiController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminProfileController; // <-- ini yang kurang
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,10 +58,11 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     // Cetak Data
     Route::get('/cetakData', fn() => view('cetakData'))->name('cetakData');
 
-    Route::get('/admin/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
-    Route::post('/admin/profile/upload', [AdminProfileController::class, 'upload'])->name('profile.upload');
-    Route::delete('/admin/profile/delete', [AdminProfileController::class, 'delete'])->name('profile.delete');
-    Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
-
+    Route::prefix('pengaturan')->middleware(['auth', 'prevent-back-history'])->group(function () {
+    Route::get('/', [AdminProfileController::class, 'index'])->name('pengaturan.index');
+    Route::post('/upload', [AdminProfileController::class, 'upload'])->name('pengaturan.upload');
+    Route::delete('/foto', [AdminProfileController::class, 'delete'])->name('pengaturan.foto.delete');
+    Route::put('/', [AdminProfileController::class, 'update'])->name('pengaturan.update');
+});
 
 });

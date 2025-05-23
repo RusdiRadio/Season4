@@ -28,7 +28,7 @@
                 <i class="bi bi-people"></i>
               </div>
               <div class="ps-3">
-                <h6>15</h6>
+                <h6></h6>
               </div>
             </div>
           </div>
@@ -45,7 +45,7 @@
                 <i class="bi bi-file-medical text-primary"></i>
               </div>
               <div class="ps-3">
-                <h6>10</h6>
+                <h6></h6>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@
                 <i class="bi bi-heart-pulse-fill text-danger"></i>
               </div>
               <div class="ps-3">
-                <h6>15</h6>
+                <h6></h6>
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@
                 <i class="bi bi-heart-fill text-success"></i>
               </div>
               <div class="ps-3">
-                <h6>10</h6>
+                <h6></h6>
               </div>
             </div>
           </div>
