@@ -50,7 +50,7 @@
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         stopScroll();
       }
-    }, 20);
+    }, 15);
   }
 
   function stopScroll() {

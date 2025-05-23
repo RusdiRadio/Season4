@@ -46,10 +46,10 @@
         <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3">{{ $edukasi->deskripsi }}</textarea>
       </div>
 
-      <div class="col-12">
+      <!-- <div class="col-12">
         <label for="tanggal" class="form-label">Tanggal Buat</label>
         <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse($edukasi->tanggal)->format('Y-m-d') }}">
-      </div>
+      </div> -->
 
       <div class="text-center">
         <button type="submit" class="btn btn-primary">Submit</button>

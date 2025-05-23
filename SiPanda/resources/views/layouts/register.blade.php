@@ -65,13 +65,8 @@
                   </div>
                   @endif
 
-                  <form
-                    method="POST"
-                    action="{{ route('register') }}"
-                    class="row g-3 needs-validation"
-                    novalidate
-                  >
-                    @csrf
+                <form method="POST" action="{{ route('register') }}" autocomplete="off" class="row g-3 needs-validation" novalidate>
+                  @csrf
 
                     <div class="col-12">
                       <label for="nama" class="form-label">Nama</label>
@@ -103,14 +98,8 @@
                       <label for="yourUsername" class="form-label">Username</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input
-                          type="text"
-                          name="username"
-                          class="form-control"
-                          id="yourUsername"
-                          value="{{ old('username') }}"
-                          required
-                        />
+                        <input type="text" name="username" class="form-control" id="yourUsername"
+                          value="{{ old('username') }}" autocomplete="off" required />
                         <div class="invalid-feedback">Please choose a username.</div>
                       </div>
                     </div>
@@ -118,13 +107,8 @@
                     <div class="col-12 position-relative">
                       <label for="yourPassword" class="form-label">Password</label>
                       <div class="input-group">
-                        <input
-                          type="password"
-                          name="password"
-                          class="form-control"
-                          id="yourPassword"
-                          required
-                        />
+                        <input type="password" name="password" class="form-control" id="yourPassword"
+                          autocomplete="new-password" required />
                         <span class="input-group-text toggle-password" style="cursor: pointer;">
                           <i class="bi bi-eye" id="togglePasswordIcon"></i>
                         </span>

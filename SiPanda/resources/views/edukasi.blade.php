@@ -38,7 +38,7 @@ use Illuminate\Support\Str;
               <th scope="col">Judul</th>
               <th scope="col">Konten</th>
               <th scope="col">Deskripsi</th>
-              <th scope="col">Tanggal Buat</th>
+              <!-- <th scope="col">Tanggal Buat</th> -->
               <th scope="col">Aksi</th>
             </tr>
           </thead>
@@ -56,7 +56,7 @@ use Illuminate\Support\Str;
               @endif
             </td>
             <td>{{ Str::limit($data->deskripsi, 25, '...') }}</td>
-              <td>{{ $data->created_at->format('d-m-Y') }}</td>
+              <!-- <td>{{ $data->created_at->format('d-m-Y') }}</td> -->
               <td>
                 @foreach ($edukasi as $item)
                   <a href="{{ route('EditEdukasi', $item->id) }}" class="btn btn-sm btn-primary me-1" title="Edit">
