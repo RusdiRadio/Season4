@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PCOS App',
+      title: 'OvaSafe Apps',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
@@ -73,55 +73,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFFE4E1),
-            Color.fromARGB(255, 255, 83, 112),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white, // Ubah background menjadi putih
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavTapped,
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavBar(
-          currentIndex: _selectedIndex,
-          onTap: _onNavTapped,
-        ),
-        floatingActionButton: _selectedIndex == 0
-            ? Padding(
-                padding: const EdgeInsets.only(bottom: 70),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: FloatingActionButton.extended(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const PrediksiPage(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
-                      );
-                    },
-                    label: const Text(
-                      "Ayo cek sekarang!",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+      floatingActionButton: _selectedIndex == 0
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 70),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.85,
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const PrediksiPage(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
                       ),
+                    );
+                  },
+                  label: const Text(
+                    "Ayo cek sekarang!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    backgroundColor: const Color(0xFFF06A8D),
-                    elevation: 4,
                   ),
+                  backgroundColor: const Color.fromARGB(255, 233, 30, 99),
+                  elevation: 4,
                 ),
-              )
-            : null,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -137,22 +125,30 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            // Bar pink dengan posisi naik sedikit dan teks OvaSafe tetap di tengah
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              color: const Color.fromARGB(255, 255, 118, 205),
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'OvaSafe',
-                        style: GoogleFonts.arimo(
-                          fontSize: 24,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, color: Colors.pink),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'OvaSafe',
+                      style: GoogleFonts.arimo(
+                        fontSize: 24,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),

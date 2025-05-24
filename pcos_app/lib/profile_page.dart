@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -75,50 +76,68 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Widget _buildProfileItem(
-      String hint, TextEditingController controller, IconData icon,
+  Widget _buildProfileItem(String hint, TextEditingController controller, IconData icon,
       {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
-          border: Border.all(color: Colors.white.withOpacity(0.3)),
+          color: Colors.grey.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
         ),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(icon, color: Colors.white),
-            ),
+            Icon(icon, color: Colors.black),
+            const SizedBox(width: 12),
             Expanded(
               child: _isEditing
                   ? TextField(
                       controller: controller,
                       obscureText: obscureText,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: hint,
-                        hintStyle: const TextStyle(color: Colors.white70),
+                        hintStyle: const TextStyle(color: Colors.black54),
                       ),
                     )
                   : Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
                         controller.text,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(color: Colors.black, fontSize: 16),
                       ),
                     ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(String label, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(top: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.black),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
@@ -129,130 +148,133 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "Profil",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: Container(
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 255, 118, 205),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              Center(
+                child: Text(
+                  'Profil',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      body: Stack(
-        children: [
-          const SizedBox.expand(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFFFE4E1),
-                    Color.fromARGB(255, 255, 83, 112),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
+            Center(
+              child: GestureDetector(
+                onTap: _isEditing ? _pickImage : null,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _profileImage != null
+                          ? FileImage(_profileImage!)
+                          : const AssetImage("assets/images/profile.png")
+                              as ImageProvider,
+                    ),
+                    if (_isEditing)
+                      Positioned(
+                        bottom: 0,
+                        right: 4,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 18,
+                          child: const Icon(Icons.camera_alt, color: Colors.pink, size: 20),
+                        ),
+                      ),
                   ],
                 ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 100),
-                Center(
-                  child: GestureDetector(
-                    onTap: _isEditing ? _pickImage : null,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundImage: _profileImage != null
-                              ? FileImage(_profileImage!)
-                              : const AssetImage("assets/images/profile.png")
-                                  as ImageProvider,
-                        ),
-                        if (_isEditing)
-                          Positioned(
-                            bottom: 0,
-                            right: 4,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 18,
-                              child: const Icon(Icons.camera_alt,
-                                  color: Colors.pink, size: 20),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  _namaPenggunaController.text,
-                  style: const TextStyle(
+            const SizedBox(height: 10),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    _namaPenggunaController.text,
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  _namaController.text,
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                if (!_isEditing)
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: _toggleEdit,
-                  ),
-                if (_isEditing) ...[
-                  _buildProfileItem("Nama Pengguna", _namaPenggunaController,
-                      Icons.alternate_email),
-                  _buildProfileItem(
-                      "Nama Lengkap", _namaController, Icons.person),
-                  _buildProfileItem("Usia", _usiaController, Icons.cake),
-                  _buildProfileItem(
-                      "Tanggal Lahir", _tanggalLahirController, Icons.event),
-                  _buildProfileItem(
-                      "Alamat", _alamatController, Icons.location_on),
-                  _buildProfileItem("Nomor HP", _noHpController, Icons.phone),
-                  _buildProfileItem(
-                      "Kata Sandi", _passwordController, Icons.lock,
-                      obscureText: true),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _saveProfileData();
-                      setState(() {
-                        _isEditing = false;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Data berhasil disimpan")),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                      color: Colors.black,
                     ),
-                    child: const Text("Simpan",
-                        style: TextStyle(color: Colors.white)),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 5),
+                  Text(
+                    _namaController.text,
+                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            _buildActionButton("Edit Profile", Icons.edit, _toggleEdit),
+            if (_isEditing) ...[
+              _buildProfileItem("Nama Pengguna", _namaPenggunaController, Icons.alternate_email),
+              _buildProfileItem("Nama Lengkap", _namaController, Icons.person),
+              _buildProfileItem("Usia", _usiaController, Icons.cake),
+              _buildProfileItem("Tanggal Lahir", _tanggalLahirController, Icons.event),
+              _buildProfileItem("Alamat", _alamatController, Icons.location_on),
+              _buildProfileItem("Nomor HP", _noHpController, Icons.phone),
+              _buildProfileItem("Kata Sandi", _passwordController, Icons.lock, obscureText: true),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () async {
+                  await _saveProfileData();
+                  setState(() {
+                    _isEditing = false;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Data berhasil disimpan")),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.pink,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+                  ),
+                ),
+                child: const Text("Simpan", style: TextStyle(color: Colors.white)),
+              ),
+              const SizedBox(height: 16),
+            ],
+            _buildActionButton("Log Out", Icons.logout, () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+              Navigator.pushReplacementNamed(context, '/main.dart');
+            }),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
