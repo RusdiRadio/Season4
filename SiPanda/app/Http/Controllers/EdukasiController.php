@@ -21,11 +21,12 @@ class EdukasiController extends Controller
 
     public function store(Request $request)
     {
-        // validasi input
+        // // validasi input
+        // dd($request->all());
+
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'tanggal_buat' => 'required|date',
             'konten' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // sesuai nama kolom untuk gambar
         ]);
 
@@ -43,16 +44,15 @@ class EdukasiController extends Controller
         Edukasi::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'tanggal_buat' => $request->tanggal_buat,  // pastikan nama kolom di DB adalah tanggal_buat
             'konten' => $filename,  // simpan nama file gambar di kolom konten
         ]);
 
         return redirect()->route('edukasi')->with('success', 'Data edukasi berhasil ditambahkan.');
     }
 
-public function edit($id)
+public function edit($id_edukasi)
 {
-    $edukasi = Edukasi::findOrFail($id);
+    $edukasi = Edukasi::findOrFail($id_edukasi);
     return view('EditEdukasi', compact('edukasi'));
 }
 
@@ -61,12 +61,13 @@ public function update(Request $request, $id)
     $edukasi = Edukasi::findOrFail($id);
     $edukasi->judul = $request->judul;
     $edukasi->deskripsi = $request->deskripsi;
-    $edukasi->tanggal_buat = $request->tanggal_buat;
 
     // handle file jika diganti
     if ($request->hasFile('konten')) {
-        $file = $request->file('konten')->store('konten');
-        $edukasi->konten = $file;
+        $file = $request->file('konten');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/images', $filename);
+        $edukasi->konten = $filename;
     }
 
     $edukasi->save();

@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
              Text(
-              'Welcome OvaSafe Apps ',
+              'Welcome to Ovasafe',
               style: TextStyle(
                 fontSize: 45.0,
                 fontWeight: FontWeight.w600,
@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             Text(
-              'Enter personal details to your employee account',
+              '',
               style: TextStyle(
                 fontSize: 20,
                 color:Color.fromARGB(255, 255, 255, 255)
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: const Text(
-                    'Sign in',
+                    'Login',
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
@@ -78,7 +78,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                   child: const Text(
-                    'Sign up',
+                    'Daftar',
                     style: TextStyle(fontSize: 17),
                   ),
                 ),

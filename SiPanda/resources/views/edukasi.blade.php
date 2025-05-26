@@ -59,12 +59,12 @@ use Illuminate\Support\Str;
               <!-- <td>{{ $data->created_at->format('d-m-Y') }}</td> -->
               <td>
                 @foreach ($edukasi as $item)
-                  <a href="{{ route('EditEdukasi', $item->id) }}" class="btn btn-sm btn-primary me-1" title="Edit">
+                  <a href="{{ route('EditEdukasi', $item->id_edukasi) }}" class="btn btn-sm btn-primary me-1" title="Edit">
                     <i class="bi bi-pencil-square"></i>
                   </a>
                 @endforeach
 
-                <a href="{{ route('HapusEdukasi', $data->id) }}" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus konten ini?')">
+                <a href="{{ route('HapusEdukasi', $data->id_edukasi) }}" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus konten ini?')">
                   <i class="bi bi-trash"></i>
                 </a>
               </td>

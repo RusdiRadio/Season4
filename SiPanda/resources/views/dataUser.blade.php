@@ -18,42 +18,41 @@
  <div class="card">
             <div class="card-body">
               <h5 class="card-title">Tabel Data User </h5>
-              <p>Berikut adalah tabel Data User, yaitu daftar lengkap pengguna yang telah mendaftar dan menggunakan aplikasi pendeteksi PCOS. </p>
               <div class="mb-3">
-  <a href="/export/excel" class="btn btn-success"><i class="fa fa-file-excel"></i> Export to Excel</a>
-  <a href="/export/pdf" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Export to PDF</a>
-</div>
+              <a href="/export/excel" class="btn btn-success"><i class="fa fa-file-excel"></i> Export to Excel</a>
+              <a href="/export/pdf" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Export to PDF</a>
+            </div>
 
               <!-- Bordered Table -->
               <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Umur</th>
-                    <th scope="col">Tanggal Terakhir Diagnosa</th>
-                    <th scope="col">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>sri</td>
-                    <td>sri@gmail.com</td>
-                    <td>20</td>
-                    <td>2025-01-12</td>
-                    <td><span class="badge bg-danger">PCOS</span></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>dini</td>
-                    <td>dini@gmail.com</td>
-                    <td>22</td>
-                    <td>2025-02-08</td>
-                    <td><span class="badge bg-success">Tidak PCOS</span></td>                  </tr>
-                </tbody>
-              </table>
+              <thead>
+                <tr>
+                  <th scope="col" class="text-center">No</th>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nama</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Password</th>
+                </tr>
+              </thead>
+              <tbody>
+              @forelse ($pengguna as $index => $user)
+                <tr>
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ $user->id_user }}</td>
+                  <td>{{ $user->nama }}</td>
+                  <td>{{ $user->username }}</td>
+                  <td>{{ $user->email }}</td>
+                  <td>{{ \Illuminate\Support\Str::limit($user->password, 20, '...') }}</td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="6" class="text-center">Tidak ada data pengguna.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+
               <!-- End Bordered Table -->
 
             </div>

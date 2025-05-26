@@ -33,10 +33,6 @@
                             Login
                         </a>
 
-                        <a href="{{ route('register') }}" class="btn py-2 px-4 d-none d-lg-block"
-                        style="background-color: #f0afbf; border: 1px solid gray; color: white;">
-                        Daftar
-                    </a>
             </div>
         </nav>
     </div>

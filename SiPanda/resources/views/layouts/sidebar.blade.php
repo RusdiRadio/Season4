@@ -27,13 +27,19 @@
         </ul>
       </li><!-- End data-->
 
+      <li class="nav-item">
+            <a class="nav-link collapsed" href="#">
+          <i class="bi bi-pie-chart"></i>
+                <span>Visualisasi</span>
+              </a>
+      </li><!-- End data User Page Nav -->
 
       <li class="nav-item">
       <a class="nav-link {{ request()->routeIs('prediksi') ? 'active' : 'collapsed' }}" href="{{ route('prediksi') }}">
-    <i class="bi bi-bar-chart-line"></i>
+    <i class="bi bi-graph-up"></i>
           <span>Prediksi</span>
         </a>
-      </li><!-- End data User Page Nav -->
+      </li><!-- End prediksi Page Nav -->
 
       
       <li class="nav-item">

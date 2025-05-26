@@ -21,7 +21,7 @@
 
         <!-- Vertical Form -->
        <form class="row g-3" method="POST" action="{{ route('tambahedukasi.store') }}" enctype="multipart/form-data">
-    @csrf
+        @csrf
     <!-- input lainnya tetap sama -->
 
           <div class="col-12">
@@ -39,13 +39,8 @@
             <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Tuliskan deskripsi..."></textarea>
           </div>
 
-          <!-- <div class="col-12">
-            <label for="tanggal_buat" class="form-label">Tanggal Buat</label>
-            <input type="date" class="form-control" id="tanggal_buat" name="tanggal_buat">
-          </div> -->
-
           <div class="text-center">
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('edukasi') }}'">Kembali</button>
           </div>
         </form>

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '/screens/signin_screen.dart';
 import '/theme/theme.dart';
@@ -13,18 +15,56 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formSignupKey = GlobalKey<FormState>();
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   bool agreePersonalData = true;
+
+  Future<void> registerUser() async {
+    final url = Uri.parse('http://localhost:8000/api/register'); // ganti IP jika bukan emulator
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'nama': _namaController.text,
+          'username': _usernameController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data['message'] ?? 'Registration successful')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SignInScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(data['error'] ?? 'Registration failed')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       child: Column(
         children: [
-          const Expanded(
-            flex: 1,
-            child: SizedBox(
-              height: 10,
-            ),
-          ),
+          const Expanded(flex: 1, child: SizedBox(height: 10)),
           Expanded(
             flex: 0,
             child: Container(
@@ -37,198 +77,104 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               child: SingleChildScrollView(
-                // get started form
                 child: Form(
                   key: _formSignupKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // get started text
                       Text(
                         'Get Started',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
-                          color: Color.fromARGB(255, 0, 0, 0),
+                          color: Colors.black,
                         ),
                       ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
-                      // full name
+                      const SizedBox(height: 40.0),
+
+                      // Nama
                       TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Full name';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          label: const Text('Full Name'),
-                          hintText: 'Enter Full Name',
-                          hintStyle: const TextStyle(
-                            color: Colors.black26,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                        controller: _namaController,
+                        validator: (value) => value == null || value.isEmpty ? 'Please enter name' : null,
+                        decoration: _inputDecoration('Nama', 'masukkan nama'),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      // email
+                      const SizedBox(height: 20.0),
+
+                      // Username
                       TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Email';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          label: const Text('Email'),
-                          hintText: 'Enter Email',
-                          hintStyle: const TextStyle(
-                            color: Colors.black26,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                        controller: _usernameController,
+                        validator: (value) => value == null || value.isEmpty ? 'Please enter username' : null,
+                        decoration: _inputDecoration('Username', 'masukkan username'),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      // password
+                      const SizedBox(height: 20.0),
+
+                      // Email
                       TextFormField(
+                        controller: _emailController,
+                        validator: (value) => value == null || value.isEmpty ? 'Please enter email' : null,
+                        decoration: _inputDecoration('Email', 'masukkan email'),
+                      ),
+                      const SizedBox(height: 20.0),
+
+                      // Password
+                      TextFormField(
+                        controller: _passwordController,
                         obscureText: true,
                         obscuringCharacter: '*',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Password';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          label: const Text('Password'),
-                          hintText: 'Enter Password',
-                          hintStyle: const TextStyle(
-                            color: Colors.black26,
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.black12, // Default border color
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
+                        validator: (value) => value == null || value.length < 8 ? 'Password minimal 8 karakter' : null,
+                        decoration: _inputDecoration('Password', 'masukkan password'),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      // i agree to the processing
+                      const SizedBox(height: 25.0),
+
+                      // Persetujuan data
                       Row(
                         children: [
                           Checkbox(
                             value: agreePersonalData,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                agreePersonalData = value!;
-                              });
-                            },
+                            onChanged: (value) => setState(() => agreePersonalData = value!),
                             activeColor: lightColorScheme.primary,
                           ),
-                          const Text(
-                            'I agree to the processing of ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
+                          const Text('I agree to the processing of '),
                           Text(
                             'Personal data',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 65, 70, 223),
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: lightColorScheme.primary),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      // signup button
+                      const SizedBox(height: 25.0),
+
+                      // Tombol Daftar
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignupKey.currentState!.validate() &&
-                                agreePersonalData) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-                            } else if (!agreePersonalData) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data')),
-                              );
+                            if (_formSignupKey.currentState!.validate()) {
+                              if (agreePersonalData) {
+                                registerUser();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Please agree to personal data processing')),
+                                );
+                              }
                             }
                           },
-                          child: const Text('Sign up'),
+                          child: const Text('Daftar'),
                         ),
                       ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      // sign up divider
-                     
-                      // already have an account
+                      const SizedBox(height: 30.0),
+
+                      // Sudah punya akun?
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Already have an account? ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
+                          const Text('Already have an account? '),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) => const SignInScreen(),
-                                ),
-                              );
-                            },
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const SignInScreen()),
+                            ),
                             child: Text(
-                              'Sign in',
+                              'Login',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
@@ -237,9 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20.0),
                     ],
                   ),
                 ),
@@ -247,6 +191,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label, String hint) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.black26),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Colors.black12),
       ),
     );
   }

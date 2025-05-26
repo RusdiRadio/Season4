@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '/widgets/custom_scaffold.dart';
 import 'package:pcos_app/main.dart';
@@ -13,17 +15,53 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formSignInKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool rememberPassword = true;
+
+  Future<void> _loginUser() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8000/api/login'), // Ganti dengan IP PC kamu
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': username,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login sukses
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login berhasil!')),
+        );
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          (route) => false,
+        );
+      } else {
+        final res = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       child: Column(
         children: [
-          const Expanded(
-            flex: 6,
-            child: SizedBox(height: 10),
-          ),
+          const Expanded(flex: 6, child: SizedBox(height: 10)),
           Expanded(
             flex: 7,
             child: Container(
@@ -42,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                        'Welcome back',
+                        'Welcome OvaSafe',
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
@@ -51,42 +89,26 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       const SizedBox(height: 40.0),
                       TextFormField(
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'Please enter Email';
-                        //   }
-                        //   return null;
-                        // },
+                        controller: _usernameController,
                         decoration: InputDecoration(
-                          label: const Text('Email'),
-                          hintText: 'Enter Email',
-                          hintStyle: const TextStyle(
-                            color: Color.fromARGB(209, 0, 0, 0),
-                          ),
+                          label: const Text('Username'),
+                          hintText: 'Enter Username',
+                          hintStyle: const TextStyle(color: Color.fromARGB(209, 0, 0, 0)),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(80, 128, 125, 125),
-                            ),
+                            borderSide: const BorderSide(color: Color.fromARGB(80, 128, 125, 125)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(93, 158, 158, 158),
-                            ),
+                            borderSide: const BorderSide(color: Color.fromARGB(93, 158, 158, 158)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
                       const SizedBox(height: 25.0),
                       TextFormField(
+                        controller: _passwordController,
                         obscureText: true,
                         obscuringCharacter: '*',
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'Please enter Password';
-                        //   }
-                        //   return null;
-                        // },
                         decoration: InputDecoration(
                           label: const Text('Password'),
                           hintText: 'Enter Password',
@@ -114,14 +136,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                     rememberPassword = value!;
                                   });
                                 },
-                                activeColor:
-                                    const Color.fromARGB(255, 114, 119, 255),
+                                activeColor: const Color.fromARGB(255, 114, 119, 255),
                               ),
                               const Text(
                                 'Remember me',
-                                style: TextStyle(
-                                  color: Color.fromARGB(210, 164, 163, 163),
-                                ),
+                                style: TextStyle(color: Color.fromARGB(210, 164, 163, 163)),
                               ),
                             ],
                           ),
@@ -141,47 +160,30 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-
-                              // Navigasi ke MyHomePage dan hapus semua halaman sebelumnya
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MyHomePage()),
-                                (route) => false,
-                              );
+                            if (_formSignInKey.currentState!.validate() && rememberPassword) {
+                              _loginUser();
                             } else if (!rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text(
-                                      'Please agree to the processing of personal data'),
+                                  content: Text('Please agree to the processing of personal data'),
                                 ),
                               );
                             }
                           },
-                          child: const Text('Sign In'),
+                          child: const Text('Login'),
                         ),
                       ),
                       const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Don\'t have an account? ',
-                            style: TextStyle(color: Colors.black45),
-                          ),
+                          const Text('Don\'t have an account? ', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              // arahkan ke SignUpScreen
+                              // TODO: arahkan ke SignUpScreen
                             },
                             child: Text(
-                              'Sign Up',
+                              'Daftar',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,

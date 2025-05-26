@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EdukasiController;
-use App\Http\Controllers\RegisterController;
+// use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminProfileController; // <-- ini yang kurang
+use App\Http\Controllers\Api\PenggunaController;
+
 
 
 /*
@@ -15,12 +17,12 @@ use App\Http\Controllers\AdminProfileController; // <-- ini yang kurang
 */
 
 // Public
-Route::get('/', fn() => view('welcome'));
+Route::get('/', fn() => view('landingpage.index'));
 Route::get('/index', fn() => view('landingpage.index'))->name('index');
 
 // Registration
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+// Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('/register', [RegisterController::class, 'register']);
 
 // Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -36,7 +38,9 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Data User
-    Route::get('/dataUser', fn() => view('dataUser'))->name('dataUser');
+    Route::get('/dataUser', [PenggunaController::class, 'index'])->name('dataUser');
+    Route::get('/data-user', [PenggunaController::class, 'index'])->name('dataUser.index');
+
 
     // Riwayat
     Route::get('/Riwayat', fn() => view('Riwayat'))->name('Riwayat');
