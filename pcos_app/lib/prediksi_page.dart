@@ -12,7 +12,6 @@ class _PrediksiPageState extends State<PrediksiPage> {
   final List<Map<String, dynamic>> _dataList = [];
 
   final TextEditingController _usiaController = TextEditingController();
-  final TextEditingController _rambutController = TextEditingController();
   final TextEditingController _lingkarController = TextEditingController();
 
   String? _rambut;
@@ -22,88 +21,75 @@ class _PrediksiPageState extends State<PrediksiPage> {
   String? _rontok;
   String? _jerawat;
   String? _junkFood;
+  String? _haidTeratur;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  DateTime? _selectedDate;
-  String? _tanggalSelesai;
-
-  void _pickDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-        final selesai = picked.add(const Duration(days: 7));
-        _tanggalSelesai = "${selesai.day}/${selesai.month}/${selesai.year}";
-      });
-    }
-  }
-
   void _addData() {
-    if (_formKey.currentState!.validate() && _selectedDate != null) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _dataList.add({
           'usia': _usiaController.text,
-          'siklus':
-              "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year} - $_tanggalSelesai",
-          'rambut': _rambut,
           'lingkar': _lingkarController.text,
+          'rambut': _rambut,
           'kenaikan_berat': _beratBadan,
           'rambut_tidak_wajar': _rambutTidakWajar,
           'kulit_gelap': _kulitGelap,
           'kerontokan': _rontok,
           'jerawat': _jerawat,
           'junk_food': _junkFood,
+          'haid': _haidTeratur,
         });
 
         _usiaController.clear();
-        _rambutController.clear();
         _lingkarController.clear();
+        _rambut = null;
         _beratBadan = null;
         _rambutTidakWajar = null;
         _kulitGelap = null;
         _rontok = null;
         _jerawat = null;
         _junkFood = null;
-        _selectedDate = null;
-        _tanggalSelesai = null;
+        _haidTeratur = null;
+
+        _formKey.currentState!.reset();
       });
     }
   }
 
-  Widget _buildInputField(String label, TextEditingController controller,
-      {Widget? suffix}) {
+  Widget _buildInputField(
+    String label,
+    TextEditingController controller, {
+    Widget? suffix,
+    IconData? icon,
+  }) {
     return TextFormField(
       controller: controller,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
+        prefixIcon: icon != null ? Icon(icon, color: Colors.black87) : null,
         labelText: label,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Colors.grey.withOpacity(0.1),
         suffix: suffix,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      validator: (value) =>
-          value == null || value.isEmpty ? 'Tidak boleh kosong' : null,
+      validator: (value) => value == null || value.isEmpty ? 'Tidak boleh kosong' : null,
     );
   }
 
-  Widget _buildDropdownField(String label, String? value, Function(String?) onChanged) {
+  Widget _buildDropdownField(String label, String? value, Function(String?) onChanged,
+      {IconData? icon}) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(
+        prefixIcon: icon != null ? Icon(icon, color: Colors.black87) : null,
         labelText: label,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Colors.grey.withOpacity(0.1),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -121,68 +107,38 @@ class _PrediksiPageState extends State<PrediksiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        title: const Text("Form Klasifikasi PCOS"),
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 255, 118, 205),
+        centerTitle: true,
         elevation: 0,
-        foregroundColor: Colors.white,
+        title: Text(
+          "Form Klasifikasi PCOS",
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFFE4E1), Color.fromARGB(255, 255, 83, 112)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Form(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
-                          _buildInputField("Usia (tahun)", _usiaController),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () => _pickDate(context),
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  labelText: _selectedDate == null
-                                      ? "Pilih tanggal mulai haid"
-                                      : "Mulai: ${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}\n"
-                                          "Selesai: $_tanggalSelesai",
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                                validator: (_) => _selectedDate == null
-                                    ? 'Pilih tanggal mulai haid'
-                                    : null,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                           _buildDropdownField("Pertumbuhan rambut berlebih", _rambut,
-                               (val) => setState(() => _rambut = val)),
+                          _buildInputField("Usia (tahun)", _usiaController, icon: Icons.cake),
                           const SizedBox(height: 12),
                           _buildInputField(
                             "Lingkar pinggang & panggul",
@@ -191,58 +147,75 @@ class _PrediksiPageState extends State<PrediksiPage> {
                               padding: EdgeInsets.only(right: 10),
                               child: Text("cm", style: TextStyle(color: Colors.grey)),
                             ),
+                            icon: Icons.straighten,
                           ),
                           const SizedBox(height: 12),
+                          _buildDropdownField("Apakah Haid teratur?", _haidTeratur,
+                              (val) => setState(() => _haidTeratur = val),
+                              icon: Icons.calendar_month),
+                          const SizedBox(height: 12),
                           _buildDropdownField("Kenaikan berat badan", _beratBadan,
-                              (val) => setState(() => _beratBadan = val)),
+                              (val) => setState(() => _beratBadan = val),
+                              icon: Icons.monitor_weight),
                           const SizedBox(height: 12),
                           _buildDropdownField("Pertumbuhan rambut tidak wajar", _rambutTidakWajar,
-                              (val) => setState(() => _rambutTidakWajar = val)),
+                              (val) => setState(() => _rambutTidakWajar = val),
+                              icon: Icons.face_retouching_natural),
                           const SizedBox(height: 12),
                           _buildDropdownField("Penggelapan kulit di area tidak wajar", _kulitGelap,
-                              (val) => setState(() => _kulitGelap = val)),
+                              (val) => setState(() => _kulitGelap = val),
+                              icon: Icons.dark_mode),
                           const SizedBox(height: 12),
                           _buildDropdownField("Kerontokan rambut", _rontok,
-                              (val) => setState(() => _rontok = val)),
+                              (val) => setState(() => _rontok = val),
+                              icon: Icons.content_cut),
                           const SizedBox(height: 12),
                           _buildDropdownField("Jerawat", _jerawat,
-                              (val) => setState(() => _jerawat = val)),
+                              (val) => setState(() => _jerawat = val),
+                              icon: Icons.sick),
                           const SizedBox(height: 12),
                           _buildDropdownField("Makan makanan junk food?", _junkFood,
-                              (val) => setState(() => _junkFood = val)),
+                              (val) => setState(() => _junkFood = val),
+                              icon: Icons.fastfood),
+                          const SizedBox(height: 12),
+                          _buildDropdownField("Pertumbuhan rambut berlebih", _rambut,
+                              (val) => setState(() => _rambut = val),
+                              icon: Icons.face),
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             onPressed: _addData,
-                            icon: const Icon(Icons.add, color: Colors.pink),
-                            label: const Text("Tambah Data",
-                                style: TextStyle(color: Colors.pink)),
+                            icon: const Icon(Icons.add, color: Colors.white),
+                            label: const Text("Tambah Data", style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.pink,
+                              backgroundColor: const Color.fromARGB(255, 233, 30, 99),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    if (_dataList.isNotEmpty)
-                      Column(
+                  ),
+                ),
+                const SizedBox(height: 32),
+                if (_dataList.isNotEmpty)
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 350),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Data Terkumpul:',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+                            style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
                           const SizedBox(height: 12),
                           ..._dataList.map((data) => Card(
-                                color: Colors.white.withOpacity(0.9),
+                                 color: Colors.grey.withOpacity(0.1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: ListTile(
                                   title: Text("Usia: ${data['usia']}"),
                                   subtitle: Text(
-                                    "Siklus: ${data['siklus']}\n"
                                     "Rambut berlebih: ${data['rambut']}\n"
                                     "Lingkar: ${data['lingkar']} cm\n"
                                     "Kenaikan berat: ${data['kenaikan_berat']}\n"
@@ -250,12 +223,12 @@ class _PrediksiPageState extends State<PrediksiPage> {
                                     "Kulit gelap: ${data['kulit_gelap']}\n"
                                     "Kerontokan: ${data['kerontokan']}\n"
                                     "Jerawat: ${data['jerawat']}\n"
-                                    "Junk food: ${data['junk_food']}",
+                                    "Junk food: ${data['junk_food']}\n"
+                                    "Haid Teratur: ${data['haid']}\n",
                                   ),
                                   isThreeLine: true,
                                   trailing: IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
+                                    icon: const Icon(Icons.delete, color: Colors.red),
                                     onPressed: () {
                                       setState(() {
                                         _dataList.remove(data);
@@ -265,15 +238,15 @@ class _PrediksiPageState extends State<PrediksiPage> {
                                 ),
                               )),
                         ],
-                      )
-                    else
-                      const Text(
-                        "Belum ada data yang dimasukkan.",
-                        style: TextStyle(color: Colors.white),
                       ),
-                  ],
-                ),
-              ),
+                    ),
+                  )
+                else
+                  const Text(
+                    "Belum ada data yang dimasukkan.",
+                    style: TextStyle(color: Colors.black),
+                  ),
+              ],
             ),
           ),
         ),

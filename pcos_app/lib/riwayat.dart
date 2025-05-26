@@ -11,19 +11,19 @@ class RiwayatBar extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 40),
       height: 120,
       decoration: BoxDecoration(
-        color: const Color(0xFFF6D5DC),
+        color: Colors.grey.withOpacity(0.1), // Abu-abu transparan
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Hasil Terakhir',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFFF06A8D),
+              color: Color.fromARGB(255, 233, 30, 99),
             ),
           ),
           Expanded(
@@ -35,11 +35,12 @@ class RiwayatBar extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DetailRiwayat()),
+                      builder: (context) => const DetailRiwayat(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF06A8D),
+                  backgroundColor: const Color.fromARGB(255, 233, 30, 99),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -49,7 +50,7 @@ class RiwayatBar extends StatelessWidget {
                 child: const Text(
                   'Riwayat',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
