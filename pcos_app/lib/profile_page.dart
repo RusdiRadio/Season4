@@ -24,6 +24,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _noHpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final Color pinkColor = const Color.fromARGB(255, 233, 30, 99);
+
   @override
   void initState() {
     super.initState();
@@ -84,11 +86,11 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.black),
+            Icon(icon, color: pinkColor),
             const SizedBox(width: 12),
             Expanded(
               child: _isEditing
@@ -124,12 +126,12 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.black),
+            Icon(icon, color: pinkColor),
             const SizedBox(width: 8),
             Text(
               label,
@@ -206,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 18,
-                          child: const Icon(Icons.camera_alt, color: Colors.pink, size: 20),
+                          child: Icon(Icons.camera_alt, color: pinkColor, size: 20),
                         ),
                       ),
                   ],
@@ -257,10 +259,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink,
+                  backgroundColor: pinkColor,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: const Text("Simpan", style: TextStyle(color: Colors.white)),

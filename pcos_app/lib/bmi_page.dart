@@ -44,9 +44,9 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Background putih
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 118, 205), // Pink elegan
+        backgroundColor: const Color.fromARGB(255, 255, 118, 205),
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -87,7 +87,10 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                 child: Text(
                   'Hitung BMI',
                   style: GoogleFonts.poppins(
-                      fontSize: 18, fontWeight: FontWeight.w600),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
@@ -97,8 +100,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                     Text(
                       "BMI kamu: ${_bmiResult!.toStringAsFixed(2)}",
                       style: GoogleFonts.poppins(
-                        fontSize: 24, 
-                        color: Colors.black, // Warna hitam
+                        fontSize: 24,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -106,7 +109,7 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                       "Status: $_status",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
-                        color: Colors.black, // Warna hitam
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -134,9 +137,11 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
       decoration: InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: Colors.grey.withOpacity(0.1), // Warna diubah jadi grey dengan opacity 0.1
-        prefixIcon: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
-        labelStyle: GoogleFonts.poppins(fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
+        fillColor: Colors.grey.withOpacity(0.1),
+        prefixIcon: Icon(icon,
+            color: const Color.fromARGB(255, 233, 30, 99)), // Pink
+        labelStyle: GoogleFonts.poppins(
+            fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

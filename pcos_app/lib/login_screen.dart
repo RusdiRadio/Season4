@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '/screens/signin_screen.dart';
 import '/screens/signup_screen.dart';
-import '/theme/theme.dart';
+import '/theme/theme.dart'; // tetap dipertahankan
 import '/widgets/custom_scaffold.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -9,85 +10,123 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-             Text(
-              'Welcome to Ovasafe',
-              style: TextStyle(
-                fontSize: 45.0,
-                fontWeight: FontWeight.w600,
-                color: Color.fromARGB(255, 255, 255, 255)
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 7),
-            Text(
-              '',
-              style: TextStyle(
-                fontSize: 20,
-                color:Color.fromARGB(255, 255, 255, 255)
-                
-              ),
-              textAlign: TextAlign.center,
-            ),
-             SizedBox(height: 40),
-            // Baris tombol Sign in dan Sign up
-            Row(
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFF8BBD0), // Soft pink
+              Color(0xFFE91E63), // Pink tua
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        width: double.infinity,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Tombol Sign In
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignInScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    foregroundColor: Color.fromARGB(255, 255, 138, 201),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20), // Sudut tumpul
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 17),
-                  ),
+                // Logo
+                Image.asset(
+                  'web/logo.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain,
                 ),
-                 SizedBox(width: 20),
-                // Tombol Sign Up
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignUpScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 255, 156, 217),
-                    foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20), // Sudut tumpul
+                const SizedBox(height: 24),
+
+                // Teks utama
+                Text(
+                  'Welcome to Ovasafe',
+                  style: GoogleFonts.poppins(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 12),
+
+                Text(
+                  'Enter personal details to your employee account',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.white70,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 48),
+
+                // Tombol Sign in dan Sign up
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Tombol Login
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignInScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFFE91E63),
+                        elevation: 4,
+                        shadowColor: Colors.black38,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                      ),
+                      child: Text(
+                        'Login',
+                        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  ),
-                  child: const Text(
-                    'Daftar',
-                    style: TextStyle(fontSize: 17),
-                  ),
+
+                    const SizedBox(width: 20),
+
+                    // Tombol Daftar
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE91E63),
+                        foregroundColor: Colors.white,
+                        elevation: 4,
+                        shadowColor: Colors.black38,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                      ),
+                      child: Text(
+                        'Daftar',
+                        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
-

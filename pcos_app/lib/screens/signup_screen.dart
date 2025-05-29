@@ -64,17 +64,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return CustomScaffold(
       child: Column(
         children: [
-          const Expanded(flex: 1, child: SizedBox(height: 10)),
+          const Expanded(flex: 2, child: SizedBox(height: 7)),
           Expanded(
-            flex: 0,
+            flex: 10,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(40.0, 50.0, 40.0, 20.0),
-              decoration: const BoxDecoration(
+              padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 10.0),
+              decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40.0),
                   topRight: Radius.circular(40.0),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -3),
+                  ),
+                ],
               ),
               child: SingleChildScrollView(
                 child: Form(
@@ -83,98 +90,149 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Get Started',
+                        'Create Account',
                         style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(height: 40.0),
+                      const SizedBox(height: 30.0),
 
                       // Nama
-                      TextFormField(
+                      _buildInputField(
+                        label: 'Full Name',
+                        hint: 'Enter your full name',
                         controller: _namaController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter name' : null,
-                        decoration: _inputDecoration('Nama', 'masukkan nama'),
+                        validatorText: 'Please enter full name',
                       ),
                       const SizedBox(height: 20.0),
 
                       // Username
-                      TextFormField(
+                      _buildInputField(
+                        label: 'Username',
+                        hint: 'Enter your username',
                         controller: _usernameController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter username' : null,
-                        decoration: _inputDecoration('Username', 'masukkan username'),
+                        validatorText: 'Please enter username',
                       ),
                       const SizedBox(height: 20.0),
 
                       // Email
-                      TextFormField(
+                      _buildInputField(
+                        label: 'Email',
+                        hint: 'Enter your email',
                         controller: _emailController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter email' : null,
-                        decoration: _inputDecoration('Email', 'masukkan email'),
+                        validatorText: 'Please enter email',
                       ),
                       const SizedBox(height: 20.0),
 
                       // Password
-                      TextFormField(
+                      _buildInputField(
+                        label: 'Password',
+                        hint: 'Create a password',
                         controller: _passwordController,
-                        obscureText: true,
-                        obscuringCharacter: '*',
-                        validator: (value) => value == null || value.length < 8 ? 'Password minimal 8 karakter' : null,
-                        decoration: _inputDecoration('Password', 'masukkan password'),
+                        isPassword: true,
+                        validatorText: 'Password must be at least 8 characters',
+                        minLength: 8,
                       ),
-                      const SizedBox(height: 25.0),
+                      const SizedBox(height: 20.0),
 
-                      // Persetujuan data
+                      // Agreement
                       Row(
                         children: [
                           Checkbox(
                             value: agreePersonalData,
-                            onChanged: (value) => setState(() => agreePersonalData = value!),
+                            onChanged: (value) {
+                              setState(() {
+                                agreePersonalData = value!;
+                              });
+                            },
                             activeColor: lightColorScheme.primary,
                           ),
-                          const Text('I agree to the processing of '),
-                          Text(
-                            'Personal data',
-                            style: TextStyle(fontWeight: FontWeight.bold, color: lightColorScheme.primary),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                                children: [
+                                  const TextSpan(text: 'I agree to the '),
+                                  TextSpan(
+                                    text: 'processing of personal data',
+                                    style: TextStyle(
+                                      color: lightColorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 25.0),
 
-                      // Tombol Daftar
+                      const SizedBox(height: 30.0),
+
+                      // Sign Up Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE91E63),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            elevation: 4,
+                          ),
                           onPressed: () {
                             if (_formSignupKey.currentState!.validate()) {
                               if (agreePersonalData) {
                                 registerUser();
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please agree to personal data processing')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Please agree to the processing of personal data',
+                                    ),
+                                  ),
                                 );
                               }
                             }
                           },
-                          child: const Text('Daftar'),
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 30.0),
 
-                      // Sudah punya akun?
+                      const SizedBox(height: 25),
+
+                      // Already have an account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Already have an account? '),
+                          const Text(
+                            'Already have an account? ',
+                            style: TextStyle(color: Colors.black54),
+                          ),
                           GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const SignInScreen()),
-                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SignInScreen(),
+                                ),
+                              );
+                            },
                             child: Text(
-                              'Login',
+                              'Sign In',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
@@ -183,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -195,15 +253,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  InputDecoration _inputDecoration(String label, String hint) {
-    return InputDecoration(
-      labelText: label,
-      hintText: hint,
-      hintStyle: const TextStyle(color: Colors.black26),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.black12),
+  Widget _buildInputField({
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+    required String validatorText,
+    bool isPassword = false,
+    int? minLength,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isPassword,
+      obscuringCharacter: '*',
+      validator: (value) {
+        if (value == null || value.isEmpty) return validatorText;
+        if (minLength != null && value.length < minLength) {
+          return '$validatorText (min $minLength characters)';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.grey[100],
+        labelStyle: const TextStyle(color: Colors.black87),
+        hintStyle: const TextStyle(color: Colors.black38),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: lightColorScheme.primary, width: 2),
+        ),
       ),
     );
   }
