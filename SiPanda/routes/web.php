@@ -7,6 +7,13 @@ use App\Http\Controllers\EdukasiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminProfileController; // <-- ini yang kurang
 use App\Http\Controllers\Api\PenggunaController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\PrediksiController;
+use App\Http\Controllers\VisualisasiController;
+use App\Http\Controllers\RiwayatController;
+
+
+
 
 
 
@@ -19,6 +26,16 @@ use App\Http\Controllers\Api\PenggunaController;
 // Public
 Route::get('/', fn() => view('landingpage.index'));
 Route::get('/index', fn() => view('landingpage.index'))->name('index');
+Route::get('/tentang', function () {
+    return view('landingpage.tentang');
+})->name('tentang');
+
+Route::get('/pengenalan', function () {
+    return view('landingpage.pengenalan');
+})->name('pengenalan');
+Route::get('/edukasii', function () {
+    return view('landingpage.edukasii');
+})->name('edukasii');
 
 // Registration
 // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -43,7 +60,10 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
     // Riwayat
-    Route::get('/Riwayat', fn() => view('Riwayat'))->name('Riwayat');
+Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+
+    // visualisasi
+    Route::get('/visualisasi', fn() => view('visualisasi'))->name('visualisasi');
 
     // CRUD Edukasi
     Route::get('/edukasi', [EdukasiController::class, 'index'])->name('edukasi');
@@ -57,7 +77,11 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/pengaturan', fn() => view('pengaturan'))->name('pengaturan');
 
     // Prediksi
-    Route::get('/prediksi', fn() => view('prediksi'))->name('prediksi');
+    Route::get('/prediksi', [PrediksiController::class, 'index'])->name('prediksi');
+
+    //route visualisasi
+    Route::get('/visualisasi', [VisualisasiController::class, 'index'])->name('visualisasi');
+
 
     // Cetak Data
     Route::get('/cetakData', fn() => view('cetakData'))->name('cetakData');
@@ -69,4 +93,13 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::put('/', [AdminProfileController::class, 'update'])->name('pengaturan.update');
 });
 
+
 });
+
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+// Menampilkan form reset password (dari link email)
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// Menangani submit form reset password
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');

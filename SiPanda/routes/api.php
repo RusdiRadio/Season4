@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PenggunaController;
+use App\Http\Controllers\PcosController;
+
 
 
 
@@ -23,4 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [PenggunaController::class, 'login']);
 Route::post('/register', [PenggunaController::class, 'register']);
+Route::post('/predict-pcos', [PcosController::class, 'predict']);
+
 

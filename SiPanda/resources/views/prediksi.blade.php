@@ -28,31 +28,49 @@
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Weight</th>
-                    <th scope="col">Height</th>
-                    <th scope="col">Cycle</th>
-                    <th scope="col">Hip</th>
-                    <th scope="col">Waist</th>
-                    <th scope="col">Weight gain</th>
-                    <th scope="col">Hair Growth</th>
-                    <th scope="col">Darkening Skin Folds</th>
-                    <th scope="col">Hair Lossy</th>
-                    <th scope="col">Pimples</th>
-                    <th scope="col">Fastfood</th>
+                    <th scope="col">No</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">Umur</th>
+                    <th scope="col">Berat Badan</th>
+                    <th scope="col">Tinggi Badan</th>
+                    <th scope="col">Siklus Haid</th>
+                    <th scope="col">Lingkar Panggul</th>
+                    <th scope="col">Lingkar Pingggang</th>
+                    <th scope="col">Kenaikan Berat Badan</th>
+                    <th scope="col">Pertumbuhan Rambut Berlebih</th>
+                    <th scope="col">Penggelapan Lipatan Kulit</th>
+                    <th scope="col">Kerontokan Rambut</th>
+                    <th scope="col">Jerawat</th>
+                    <th scope="col">FastFood</th>
                     <th scope="col">BMI</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Tanggal Diagnosa</th>
+                    <th scope="col">Status Diagnosa</th>
                     <th scope="col">Edukasi</th>
-
-
-
                   </tr>
                 </thead>
                 <tbody>
-                  
+                    @foreach($prediksi as $p)
+                    <tr>
+                    <td>{{ $loop->iteration}}</td>
+                    <td>{{ $p->nama }}</td>
+                    <td>{{ $p->Umur }}</td>
+                    <td>{{ $p->Berat_kg }}</td>
+                    <td>{{ $p->Tinggi_cm }}</td>
+                    <td>{{ $p->Siklus_Haid }}</td>
+                    <td>{{ $p->Lingkar_Panggul_cm }}</td>
+                    <td>{{ $p->Lingkar_Pinggang_cm }}</td>
+                    <td>{{ $p->Kenaikan_BB ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->Pertumbuhan_Rambut_di_Area_Tidak_Wajar ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->Penggelapan_Kulit_di_Area_Lipatan ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->Kerontokan_Rambut ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->Jerawat ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->Sering_Makan_FastFood ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $p->BMI }}</td>
+                    <td>{{ $p->tanggal_diagnosa }}</td>
+                    <td>{{ $p->status_diagnosa }}</td>
+                    <td>{{ $p->edukasi ?? '-' }}</td>
+                </tr>
+                    @endforeach
                 </tbody>
               </table>
               <!-- End Bordered Table -->

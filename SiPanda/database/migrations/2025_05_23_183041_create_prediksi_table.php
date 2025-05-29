@@ -12,29 +12,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prediksi', function (Blueprint $table) {
-            $table->id('id_prediksi');
-            $table->unsignedBigInteger('id_user');
-            $table->string('nama');
-            $table->integer('Umur');
-            $table->float('Berat_Badan');
-            $table->float('Tinggi_Badan');
-            $table->string('Siklus_Menstruasi');
-            $table->float('Lingkar_Pinggul');
-            $table->float('Lingkar_Pinggang');
-            $table->boolean('Kenaikan_Berat_Badan');
-            $table->boolean('Pertumbuhan_Rambut_Berlebih');
-            $table->boolean('Penggelapan_Lipatan_Kulit');
-            $table->boolean('Kerontokan_Rambut');
-            $table->boolean('Jerawat');
-            $table->boolean('fastfood');
-            $table->float('BMI');
-            $table->date('tanggal_diagnosa');
-            $table->string('status_diagnosa');
-            $table->text('edukasi')->nullable();
-            $table->timestamps();
+        $table->id('id_prediksi');
+        $table->unsignedBigInteger('id_user');
+        $table->string('nama');
+        $table->integer('Umur');                        // numeric input, jadi integer
+        $table->float('Berat_kg');                      // float sesuai berat badan
+        $table->float('Tinggi_cm');                     // float sesuai tinggi badan
+        $table->string('Siklus_Haid');                 // input numeric, ganti jadi integer
+        $table->float('Lingkar_Panggul_cm');            // float
+        $table->float('Lingkar_Pinggang_cm');           // float
+        $table->boolean('Kenaikan_BB');                  // boolean
+        $table->boolean('Pertumbuhan_Rambut_di_Area_Tidak_Wajar'); // boolean
+        $table->boolean('Penggelapan_Kulit_di_Area_Lipatan');      // boolean
+        $table->boolean('Kerontokan_Rambut');            // boolean
+        $table->boolean('Jerawat');                       // boolean
+        $table->boolean('Sering_Makan_FastFood');        // boolean
+        $table->float('BMI');                             // float
+        $table->date('tanggal_diagnosa');
+        $table->string('status_diagnosa');
+        $table->text('edukasi')->nullable();
+        $table->timestamps();
 
-            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
-        });
+        // Relasi foreign key
+        $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
+    });
     }
 
     /**

@@ -20,7 +20,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ route('Riwayat') }}" class="{{ request()->routeIs('Riwayat') ? 'active' : '' }}">
+            <a href="{{ route('riwayat') }}" class="{{ request()->routeIs('riwayat') ? 'active' : '' }}">
               <i class="bi bi-clock-history"></i><span>Riwayat</span>
             </a>
           </li>
@@ -28,7 +28,7 @@
       </li><!-- End data-->
 
       <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+          <a class="nav-link {{ request()->routeIs('visualisasi') ? 'active' : 'collapsed' }}" href="{{ route('visualisasi') }}">
           <i class="bi bi-pie-chart"></i>
                 <span>Visualisasi</span>
               </a>

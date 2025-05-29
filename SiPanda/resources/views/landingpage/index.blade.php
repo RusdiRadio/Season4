@@ -72,15 +72,12 @@
     <!-- Header End -->
 
     <!-- About Start -->
-    @include('landingpage.tentang1')
     <!-- About End -->
 
     <!-- About Start -->
-    @include('landingpage.tentang')
     <!-- About End -->
      
     <!-- edukasi Start -->
-    @include('landingpage.edukasi')
     <!-- edukasi End -->
      
 

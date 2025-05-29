@@ -46,7 +46,7 @@ use Illuminate\Support\Str;
             @forelse($edukasi as $index => $data)
             <tr>
               <th scope="row">{{ $index + 1 }}</th>
-              <td>{{ $data->id }}</td>   
+              <td>{{ $data->id_edukasi }}</td>   
               <td>{{ $data->judul }}</td>
               <td>
               @if($data->konten)

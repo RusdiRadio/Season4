@@ -59,6 +59,9 @@
                   </div>
                   @endif
 
+                  <!-- ...bagian atas tetap sama... -->
+
+                  <!-- Bagian form login -->
                   <form
                     method="POST"
                     action="{{ route('login') }}"
@@ -88,7 +91,7 @@
                       </div>
                     </div>
 
-                    <!-- Bagian password dengan icon mata -->
+                    <!-- Bagian password dengan ikon mata -->
                     <div class="col-12">
                       <label for="yourPassword" class="form-label">Password</label>
                       <div class="input-group has-validation">
@@ -115,6 +118,11 @@
                           @enderror
                         </div>
                       </div>
+                      <!-- Tambahan tautan Forgot Password -->
+                      <div class="mt-2 text-end">
+                          <a href="{{ route('password.request') }}" class="text-decoration-none small">Forgot Password?</a>
+                        </a>
+                      </div>
                     </div>
 
                     <div class="col-12">
@@ -134,9 +142,8 @@
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
-
-                    
                   </form>
+
                 </div>
               </div>
             </div>

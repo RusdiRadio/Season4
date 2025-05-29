@@ -26,22 +26,32 @@
               <!-- <p>Berikut adalah tabel Data User, yaitu daftar lengkap pengguna yang telah mendaftar dan menggunakan aplikasi pendeteksi PCOS. </p> -->
               <!-- Bordered Table -->
               <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Id User</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Umur</th>
-                    <th scope="col">Tanggal Diagnosa</th>
-                    <th scope="col">Status</th>
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Id Riwayat</th>
+      <th scope="col">Id User</th>
+      <th scope="col">Nama</th>
+      <th scope="col">Umur</th>
+      <th scope="col">Tanggal Diagnosa</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($riwayat as $r)
+      <tr>
+        <td>{{ $loop->iteration }}</td>
+        <td>{{ $r->id_riwayat }}</td>
+        <td>{{ $r->id_user }}</td>
+        <td>{{ $r->nama }}</td>
+        <td>{{ $r->umur }}</td>
+        <td>{{ $r->tanggal_diagnosa }}</td>
+        <td>{{ $r->status }}</td>
+      </tr>
+    @endforeach
+  </tbody>
+</table>
 
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  </tr>
-                </tbody>
-              </table>
               <!-- End Bordered Table -->
 
             </div>
