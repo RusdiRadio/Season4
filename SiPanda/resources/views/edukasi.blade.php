@@ -70,9 +70,9 @@ use Illuminate\Support\Str;
               </td>
             </tr>
             @empty
-            <tr>
+            <th>
               <td colspan="5" class="text-center">Tidak ada data edukasi.</td>
-            </tr>
+              </th>
             @endforelse
           </tbody>
         </table>
