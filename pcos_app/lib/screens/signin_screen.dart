@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:pcos_app/screens/signup_screen.dart'; // Ganti path sesuai struktur folder kamu
 import '/widgets/custom_scaffold.dart';
 import 'package:pcos_app/main.dart';
 import '../theme/theme.dart';
@@ -18,6 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool rememberPassword = true;
+  bool _obscurePassword = true;
 
   Future<void> _loginUser() async {
     final username = _usernameController.text;
@@ -107,7 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       const SizedBox(height: 25.0),
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         obscuringCharacter: '*',
                         decoration: InputDecoration(
                           label: const Text('Password'),
@@ -120,6 +121,17 @@ class _SignInScreenState extends State<SignInScreen> {
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -180,7 +192,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           const Text('Don\'t have an account? ', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              // TODO: arahkan ke SignUpScreen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                              );
                             },
                             child: Text(
                               'Daftar',

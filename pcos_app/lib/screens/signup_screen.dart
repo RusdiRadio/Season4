@@ -21,6 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool agreePersonalData = true;
+  bool _obscurePassword = true;
 
   Future<void> registerUser() async {
     final url = Uri.parse('http://localhost:8000/api/register'); // ganti IP jika bukan emulator
@@ -62,135 +63,156 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      child: Column(
-        children: [
-          const Expanded(flex: 1, child: SizedBox(height: 10)),
-          Expanded(
-            flex: 0,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(40.0, 50.0, 40.0, 20.0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40.0),
-                  topRight: Radius.circular(40.0),
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formSignupKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Get Started',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 40.0),
-
-                      // Nama
-                      TextFormField(
-                        controller: _namaController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter name' : null,
-                        decoration: _inputDecoration('Nama', 'masukkan nama'),
-                      ),
-                      const SizedBox(height: 20.0),
-
-                      // Username
-                      TextFormField(
-                        controller: _usernameController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter username' : null,
-                        decoration: _inputDecoration('Username', 'masukkan username'),
-                      ),
-                      const SizedBox(height: 20.0),
-
-                      // Email
-                      TextFormField(
-                        controller: _emailController,
-                        validator: (value) => value == null || value.isEmpty ? 'Please enter email' : null,
-                        decoration: _inputDecoration('Email', 'masukkan email'),
-                      ),
-                      const SizedBox(height: 20.0),
-
-                      // Password
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        obscuringCharacter: '*',
-                        validator: (value) => value == null || value.length < 8 ? 'Password minimal 8 karakter' : null,
-                        decoration: _inputDecoration('Password', 'masukkan password'),
-                      ),
-                      const SizedBox(height: 25.0),
-
-                      // Persetujuan data
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: agreePersonalData,
-                            onChanged: (value) => setState(() => agreePersonalData = value!),
-                            activeColor: lightColorScheme.primary,
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 40.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40.0, 50.0, 40.0, 20.0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40.0),
+                      topRight: Radius.circular(40.0),
+                    ),
+                  ),
+                  child: Form(
+                    key: _formSignupKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Get Started',
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
                           ),
-                          const Text('I agree to the processing of '),
-                          Text(
-                            'Personal data',
-                            style: TextStyle(fontWeight: FontWeight.bold, color: lightColorScheme.primary),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25.0),
-
-                      // Tombol Daftar
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formSignupKey.currentState!.validate()) {
-                              if (agreePersonalData) {
-                                registerUser();
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please agree to personal data processing')),
-                                );
-                              }
-                            }
-                          },
-                          child: const Text('Daftar'),
                         ),
-                      ),
-                      const SizedBox(height: 30.0),
+                        const SizedBox(height: 40.0),
 
-                      // Sudah punya akun?
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Already have an account? '),
-                          GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const SignInScreen()),
+                        // Nama
+                        TextFormField(
+                          controller: _namaController,
+                          validator: (value) =>
+                              value == null || value.isEmpty ? 'Please enter name' : null,
+                          decoration: _inputDecoration('Nama', 'masukkan nama'),
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // Username
+                        TextFormField(
+                          controller: _usernameController,
+                          validator: (value) =>
+                              value == null || value.isEmpty ? 'Please enter username' : null,
+                          decoration: _inputDecoration('Username', 'masukkan username'),
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // Email
+                        TextFormField(
+                          controller: _emailController,
+                          validator: (value) =>
+                              value == null || value.isEmpty ? 'Please enter email' : null,
+                          decoration: _inputDecoration('Email', 'masukkan email'),
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        // Password
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          obscuringCharacter: '*',
+                          validator: (value) =>
+                              value == null || value.length < 8 ? 'Password minimal 8 karakter' : null,
+                          decoration: _inputDecoration('Password', 'masukkan password').copyWith(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
-                            child: Text(
-                              'Login',
+                          ),
+                        ),
+                        const SizedBox(height: 25.0),
+
+                        // Persetujuan data
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: agreePersonalData,
+                              onChanged: (value) => setState(() => agreePersonalData = value!),
+                              activeColor: lightColorScheme.primary,
+                            ),
+                            const Flexible(child: Text('I agree to the processing of ')),
+                            Text(
+                              'Personal data',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
                               ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: 25.0),
+
+                        // Tombol Daftar
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formSignupKey.currentState!.validate()) {
+                                if (agreePersonalData) {
+                                  registerUser();
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Please agree to personal data processing')),
+                                  );
+                                }
+                              }
+                            },
+                            child: const Text('Daftar'),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 20.0),
-                    ],
+                        ),
+                        const SizedBox(height: 30.0),
+
+                        // Sudah punya akun?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Already have an account? '),
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const SignInScreen()),
+                              ),
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: lightColorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -15,31 +15,33 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Text(
-              'Welcome to Ovasafe',
+            Text(
+              'OvaSafe',
               style: TextStyle(
                 fontSize: 45.0,
                 fontWeight: FontWeight.w600,
-                color: Color.fromARGB(255, 255, 255, 255)
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 7),
             Text(
-              '',
+              'Kenali Gejala PCOS Lebih Awal, Jaga Kesehatan Reproduksi Anda',
               style: TextStyle(
-                fontSize: 20,
-                color:Color.fromARGB(255, 255, 255, 255)
-                
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
               textAlign: TextAlign.center,
             ),
-             SizedBox(height: 40),
-            // Baris tombol Sign in dan Sign up
+            const SizedBox(height: 40),
+
+
+            // Baris tombol Login dan Daftar
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Tombol Sign In
+                // Tombol Login
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -49,7 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    foregroundColor: Color.fromARGB(255, 255, 138, 201),
+                    foregroundColor: const Color.fromARGB(255, 255, 138, 201),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20), // Sudut tumpul
                     ),
@@ -60,8 +62,10 @@ class WelcomeScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
-                 SizedBox(width: 20),
-                // Tombol Sign Up
+                const SizedBox(width: 20),
+
+
+                // Tombol Daftar
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -70,7 +74,7 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 255, 156, 217),
+                    backgroundColor: const Color.fromARGB(255, 255, 156, 217),
                     foregroundColor: const Color.fromARGB(255, 255, 255, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20), // Sudut tumpul
@@ -90,4 +94,3 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
-
