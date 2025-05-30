@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pcos_app/screens/signup_screen.dart'; // Ganti path sesuai struktur folder kamu
+import 'package:pcos_app/screens/signup_screen.dart'; // Ganti sesuai struktur project-mu
 import '/widgets/custom_scaffold.dart';
 import 'package:pcos_app/main.dart';
 import '../theme/theme.dart';
@@ -26,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/api/login'), // Ganti dengan IP PC kamu
+        Uri.parse('http://localhost:8000/api/login'), // Ganti sesuai IP PC kamu
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': username,
@@ -35,7 +35,6 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Login sukses
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login berhasil!')),
         );
@@ -47,7 +46,8 @@ class _SignInScreenState extends State<SignInScreen> {
       } else {
         final res = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}')),
+          SnackBar(
+              content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}')),
         );
       }
     } catch (e) {
@@ -94,13 +94,16 @@ class _SignInScreenState extends State<SignInScreen> {
                         decoration: InputDecoration(
                           label: const Text('Username'),
                           hintText: 'Enter Username',
-                          hintStyle: const TextStyle(color: Color.fromARGB(209, 0, 0, 0)),
+                          hintStyle: const TextStyle(
+                              color: Color.fromARGB(209, 0, 0, 0)),
                           border: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB(80, 128, 125, 125)),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(80, 128, 125, 125)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Color.fromARGB(93, 158, 158, 158)),
+                            borderSide: const BorderSide(
+                                color: Color.fromARGB(93, 158, 158, 158)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -124,7 +127,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
                               color: Colors.grey,
                             ),
                             onPressed: () {
@@ -148,17 +153,22 @@ class _SignInScreenState extends State<SignInScreen> {
                                     rememberPassword = value!;
                                   });
                                 },
-                                activeColor: const Color.fromARGB(255, 114, 119, 255),
+                                activeColor:
+                                    const Color.fromARGB(255, 114, 119, 255),
                               ),
                               const Text(
                                 'Remember me',
-                                style: TextStyle(color: Color.fromARGB(210, 164, 163, 163)),
+                                style: TextStyle(
+                                    color: Color.fromARGB(210, 164, 163, 163)),
                               ),
                             ],
                           ),
                           GestureDetector(
+                            onTap: () {
+                              // aksi lupa password
+                            },
                             child: Text(
-                              'Forget password?',
+                              'Forgot password?',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
@@ -172,33 +182,52 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignInKey.currentState!.validate() && rememberPassword) {
+                            if (_formSignInKey.currentState!.validate() &&
+                                rememberPassword) {
                               _loginUser();
                             } else if (!rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Please agree to the processing of personal data'),
+                                  content: Text(
+                                      'Please agree to the processing of personal data'),
                                 ),
                               );
                             }
                           },
-                          child: const Text('Login'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pinkAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 3,
+                          ),
+                          child: const Text(
+                            'Sign In',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Don\'t have an account? ', style: TextStyle(color: Colors.black45)),
+                          const Text('Don\'t have an account? ',
+                              style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpScreen()),
                               );
                             },
                             child: Text(
-                              'Daftar',
+                              'Sign Up',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,

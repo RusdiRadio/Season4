@@ -24,7 +24,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
 
   Future<void> registerUser() async {
-    final url = Uri.parse('http://localhost:8000/api/register'); // ganti IP jika bukan emulator
+    final url = Uri.parse(
+        'http://localhost:8000/api/register'); // Ganti jika bukan emulator
 
     try {
       final response = await http.post(
@@ -85,53 +86,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Get Started',
+                          'Create Account',
                           style: TextStyle(
                             fontSize: 30.0,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 40.0),
-
-                        // Nama
-                        TextFormField(
+                        _buildInputField(
                           controller: _namaController,
-                          validator: (value) =>
-                              value == null || value.isEmpty ? 'Please enter name' : null,
-                          decoration: _inputDecoration('Nama', 'masukkan nama'),
+                          label: 'Full Name',
+                          hint: 'Enter your full name',
+                          validatorText: 'Please enter full name',
                         ),
                         const SizedBox(height: 20.0),
-
-                        // Username
-                        TextFormField(
+                        _buildInputField(
                           controller: _usernameController,
-                          validator: (value) =>
-                              value == null || value.isEmpty ? 'Please enter username' : null,
-                          decoration: _inputDecoration('Username', 'masukkan username'),
+                          label: 'Username',
+                          hint: 'Enter your username',
+                          validatorText: 'Please enter username',
                         ),
                         const SizedBox(height: 20.0),
-
-                        // Email
-                        TextFormField(
+                        _buildInputField(
                           controller: _emailController,
-                          validator: (value) =>
-                              value == null || value.isEmpty ? 'Please enter email' : null,
-                          decoration: _inputDecoration('Email', 'masukkan email'),
+                          label: 'Email',
+                          hint: 'Enter your email',
+                          validatorText: 'Please enter email',
                         ),
                         const SizedBox(height: 20.0),
-
-                        // Password
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           obscuringCharacter: '*',
-                          validator: (value) =>
-                              value == null || value.length < 8 ? 'Password minimal 8 karakter' : null,
-                          decoration: _inputDecoration('Password', 'masukkan password').copyWith(
+                          validator: (value) {
+                            if (value == null || value.length < 8) {
+                              return 'Password must be at least 8 characters';
+                            }
+                            return null;
+                          },
+                          decoration:
+                              _inputDecoration('Password', 'Create a password')
+                                  .copyWith(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 color: Colors.grey,
                               ),
                               onPressed: () {
@@ -143,18 +144,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         const SizedBox(height: 25.0),
-
-                        // Persetujuan data
                         Row(
                           children: [
                             Checkbox(
                               value: agreePersonalData,
-                              onChanged: (value) => setState(() => agreePersonalData = value!),
+                              onChanged: (value) =>
+                                  setState(() => agreePersonalData = value!),
                               activeColor: lightColorScheme.primary,
                             ),
-                            const Flexible(child: Text('I agree to the processing of ')),
+                            const Flexible(
+                                child: Text('I agree to the processing of ')),
                             Text(
-                              'Personal data',
+                              'personal data',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lightColorScheme.primary,
@@ -163,39 +164,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ],
                         ),
                         const SizedBox(height: 25.0),
-
-                        // Tombol Daftar
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE91E63),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              elevation: 4,
+                            ),
                             onPressed: () {
                               if (_formSignupKey.currentState!.validate()) {
                                 if (agreePersonalData) {
                                   registerUser();
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Please agree to personal data processing')),
+                                    const SnackBar(
+                                      content: Text(
+                                          'Please agree to the processing of personal data'),
+                                    ),
                                   );
                                 }
                               }
                             },
-                            child: const Text('Daftar'),
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 30.0),
-
-                        // Sudah punya akun?
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Already have an account? '),
+                            const Text(
+                              'Already have an account? ',
+                              style: TextStyle(color: Colors.black54),
+                            ),
                             GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (_) => const SignInScreen()),
-                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SignInScreen(),
+                                  ),
+                                );
+                              },
                               child: Text(
-                                'Login',
+                                'Sign In',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: lightColorScheme.primary,
@@ -204,7 +226,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20.0),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
@@ -217,15 +239,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required String validatorText,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return validatorText;
+        }
+        return null;
+      },
+      decoration: _inputDecoration(label, hint),
+    );
+  }
+
   InputDecoration _inputDecoration(String label, String hint) {
     return InputDecoration(
       labelText: label,
       hintText: hint,
-      hintStyle: const TextStyle(color: Colors.black26),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      filled: true,
+      fillColor: Colors.grey[100],
+      labelStyle: const TextStyle(color: Colors.black87),
+      hintStyle: const TextStyle(color: Colors.black38),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: const BorderSide(color: Colors.black12),
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: lightColorScheme.primary, width: 2),
       ),
     );
   }

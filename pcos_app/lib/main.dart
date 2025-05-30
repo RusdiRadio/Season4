@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Ubah background menjadi putih
+      backgroundColor: Colors.white,
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,
@@ -96,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     );
                   },
+                  icon: const Icon(Icons.favorite, color: Colors.white),
                   label: const Text(
                     "Ayo cek sekarang!",
                     style: TextStyle(
@@ -125,7 +126,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bar pink dengan posisi naik sedikit dan teks OvaSafe tetap di tengah
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               color: const Color.fromARGB(255, 255, 118, 205),

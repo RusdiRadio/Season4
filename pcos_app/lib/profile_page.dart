@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,6 +25,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _noHpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final Color pinkColor = const Color.fromARGB(255, 233, 30, 99);
 
   @override
   void initState() {
@@ -70,13 +74,52 @@ class _ProfilePageState extends State<ProfilePage> {
     await prefs.setString('password', _passwordController.text);
   }
 
+  Future<Map<String, dynamic>> updateProfileOnServer() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('userId') ?? 0;
+
+    final url = Uri.parse('http://localhost/api/update-profile/$userId');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'namaPengguna': _namaPenggunaController.text,
+          'nama': _namaController.text,
+          'usia': _usiaController.text,
+          'tanggalLahir': _tanggalLahirController.text,
+          'alamat': _alamatController.text,
+          'noHp': _noHpController.text,
+          'password': _passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          'status': 'error',
+          'message':
+              'Gagal menghubungi server, status code: ${response.statusCode}',
+        };
+      }
+    } catch (e) {
+      return {
+        'status': 'error',
+        'message': 'Terjadi kesalahan: $e',
+      };
+    }
+  }
+
   void _toggleEdit() {
     setState(() {
       _isEditing = !_isEditing;
     });
   }
 
-  Widget _buildProfileItem(String hint, TextEditingController controller, IconData icon,
+  Widget _buildProfileItem(
+      String hint, TextEditingController controller, IconData icon,
       {bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -84,11 +127,11 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Icon(icon, color: Colors.black),
+            Icon(icon, color: pinkColor),
             const SizedBox(width: 12),
             Expanded(
               child: _isEditing
@@ -106,7 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
                         controller.text,
-                        style: const TextStyle(color: Colors.black, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 16),
                       ),
                     ),
             ),
@@ -124,12 +168,12 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.black),
+            Icon(icon, color: pinkColor),
             const SizedBox(width: 8),
             Text(
               label,
@@ -206,7 +250,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 18,
-                          child: const Icon(Icons.camera_alt, color: Colors.pink, size: 20),
+                          child: Icon(Icons.camera_alt,
+                              color: pinkColor, size: 20),
                         ),
                       ),
                   ],
@@ -229,7 +274,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 5),
                   Text(
                     _namaController.text,
-                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+                    style:
+                        GoogleFonts.poppins(fontSize: 16, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -238,32 +284,44 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 10),
             _buildActionButton("Edit Profile", Icons.edit, _toggleEdit),
             if (_isEditing) ...[
-              _buildProfileItem("Nama Pengguna", _namaPenggunaController, Icons.alternate_email),
+              _buildProfileItem("Nama Pengguna", _namaPenggunaController,
+                  Icons.alternate_email),
               _buildProfileItem("Nama Lengkap", _namaController, Icons.person),
               _buildProfileItem("Usia", _usiaController, Icons.cake),
-              _buildProfileItem("Tanggal Lahir", _tanggalLahirController, Icons.event),
+              _buildProfileItem(
+                  "Tanggal Lahir", _tanggalLahirController, Icons.event),
               _buildProfileItem("Alamat", _alamatController, Icons.location_on),
               _buildProfileItem("Nomor HP", _noHpController, Icons.phone),
-              _buildProfileItem("Kata Sandi", _passwordController, Icons.lock, obscureText: true),
+              _buildProfileItem("Kata Sandi", _passwordController, Icons.lock,
+                  obscureText: true),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
-                  await _saveProfileData();
-                  setState(() {
-                    _isEditing = false;
-                  });
+                  final responseJson = await updateProfileOnServer();
+
+                  if (responseJson['status'] == 'success') {
+                    await _saveProfileData();
+                    setState(() {
+                      _isEditing = false;
+                    });
+                  }
+
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Data berhasil disimpan")),
+                    SnackBar(
+                        content:
+                            Text(responseJson['message'] ?? 'Tidak ada pesan')),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  backgroundColor: pinkColor,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12), // tidak terlalu tumpul
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text("Simpan", style: TextStyle(color: Colors.white)),
+                child:
+                    const Text("Simpan", style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 16),
             ],
