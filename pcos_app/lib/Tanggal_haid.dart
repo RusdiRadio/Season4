@@ -8,7 +8,8 @@ class TanggalHaid extends StatefulWidget {
   State<TanggalHaid> createState() => _TanggalHaidState();
 }
 
-class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin {
+class _TanggalHaidState extends State<TanggalHaid>
+    with TickerProviderStateMixin {
   DateTime? selectedHaidDate;
   late AnimationController _fadeController;
   late AnimationController _scaleController;
@@ -26,15 +27,15 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     _scaleController.forward();
   }
@@ -54,7 +55,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
     bool isHaid(DateTime date) {
       if (selectedHaidDate == null) return false;
       final endHaid = selectedHaidDate!.add(const Duration(days: 6));
-      return date.isAfter(selectedHaidDate!.subtract(const Duration(days: 1))) &&
+      return date
+              .isAfter(selectedHaidDate!.subtract(const Duration(days: 1))) &&
           date.isBefore(endHaid.add(const Duration(days: 1)));
     }
 
@@ -63,9 +65,9 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
       child: Column(
         children: [
           const SizedBox(height: 24),
-          
+
           const SizedBox(height: 8),
-          
+
           // Premium Date Picker Button
           ScaleTransition(
             scale: _scaleAnimation,
@@ -73,7 +75,7 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
               onTap: () async {
                 // Haptic feedback
                 // HapticFeedback.lightImpact();
-                
+
                 final pickedDate = await showDatePicker(
                   context: context,
                   initialDate: selectedHaidDate ?? DateTime.now(),
@@ -114,19 +116,22 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           ),
-                          todayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+                          todayBackgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.selected)) {
                               return const Color(0xFFD81B60);
                             }
                             return Colors.grey[100];
                           }),
-                          todayForegroundColor: MaterialStateProperty.resolveWith((states) {
+                          todayForegroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.selected)) {
                               return Colors.white;
                             }
                             return const Color(0xFFD81B60);
                           }),
-                          dayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+                          dayBackgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.selected)) {
                               return const Color(0xFFD81B60);
                             }
@@ -145,7 +150,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
                             fontWeight: FontWeight.w400,
                             letterSpacing: 0.2,
                           ),
-                          dayOverlayColor: MaterialStateProperty.resolveWith((states) {
+                          dayOverlayColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.hovered)) {
                               return const Color(0xFFD81B60).withOpacity(0.1);
                             }
@@ -155,13 +161,15 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
                             color: Colors.grey[700],
                             fontSize: 14,
                           ),
-                          yearBackgroundColor: MaterialStateProperty.resolveWith((states) {
+                          yearBackgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.selected)) {
                               return const Color(0xFFD81B60);
                             }
                             return null;
                           }),
-                          yearForegroundColor: MaterialStateProperty.resolveWith((states) {
+                          yearForegroundColor:
+                              MaterialStateProperty.resolveWith((states) {
                             if (states.contains(MaterialState.selected)) {
                               return Colors.white;
                             }
@@ -183,7 +191,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
                 }
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 margin: const EdgeInsets.symmetric(horizontal: 24),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
@@ -216,11 +225,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
                         color: Colors.white.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const Icon(
-                        Icons.calendar_today_rounded, 
-                        color: Colors.white, 
-                        size: 14
-                      ),
+                      child: const Icon(Icons.calendar_today_rounded,
+                          color: Colors.white, size: 14),
                     ),
                     const SizedBox(width: 8),
                     const Text(
@@ -237,9 +243,9 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
               ),
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Premium Status Card
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -281,7 +287,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildLuxuryTanggalTile(String label, String tanggal, bool isHaidFase) {
+  Widget _buildLuxuryTanggalTile(
+      String label, String tanggal, bool isHaidFase) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -291,17 +298,18 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
           height: 40,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: isHaidFase 
-                ? [const Color(0xFFD81B60), const Color(0xFFAD1457)]
-                : [Colors.grey[300]!, Colors.grey[400]!],
+              colors: isHaidFase
+                  ? [const Color(0xFFD81B60), const Color(0xFFAD1457)]
+                  : [Colors.grey[300]!, Colors.grey[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: (isHaidFase ? const Color(0xFFD81B60) : Colors.grey[400]!)
-                    .withOpacity(0.15),
+                color:
+                    (isHaidFase ? const Color(0xFFD81B60) : Colors.grey[400]!)
+                        .withOpacity(0.15),
                 blurRadius: 6,
                 offset: const Offset(0, 3),
               ),
@@ -313,9 +321,9 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
             size: 18,
           ),
         ),
-        
+
         const SizedBox(width: 14),
-        
+
         // Date Information
         Expanded(
           child: Column(
@@ -324,7 +332,8 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
               Text(
                 label,
                 style: TextStyle(
-                  color: isHaidFase ? const Color(0xFFD81B60) : Colors.grey[600],
+                  color:
+                      isHaidFase ? const Color(0xFFD81B60) : Colors.grey[600],
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.5,
@@ -343,7 +352,7 @@ class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin
             ],
           ),
         ),
-        
+
         // Status Badge
         if (isHaidFase)
           Container(

@@ -14,16 +14,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isEditing = false;
   File? _profileImage;
   final picker = ImagePicker();
 
   final TextEditingController _namaPenggunaController = TextEditingController();
   final TextEditingController _namaController = TextEditingController();
-  final TextEditingController _usiaController = TextEditingController();
-  final TextEditingController _tanggalLahirController = TextEditingController();
-  final TextEditingController _alamatController = TextEditingController();
-  final TextEditingController _noHpController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   final Color pinkColor = const Color.fromARGB(255, 233, 30, 99);
@@ -49,10 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
     _namaPenggunaController.text = prefs.getString('namaPengguna') ?? "";
     _namaController.text = prefs.getString('nama') ?? "";
-    _usiaController.text = prefs.getString('usia') ?? "";
-    _tanggalLahirController.text = prefs.getString('tanggalLahir') ?? "";
-    _alamatController.text = prefs.getString('alamat') ?? "";
-    _noHpController.text = prefs.getString('noHp') ?? "+62";
+    _emailController.text = prefs.getString('email') ?? "";
     _passwordController.text = prefs.getString('password') ?? "********";
 
     String? imagePath = prefs.getString('profileImage');
@@ -67,10 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('namaPengguna', _namaPenggunaController.text);
     await prefs.setString('nama', _namaController.text);
-    await prefs.setString('usia', _usiaController.text);
-    await prefs.setString('tanggalLahir', _tanggalLahirController.text);
-    await prefs.setString('alamat', _alamatController.text);
-    await prefs.setString('noHp', _noHpController.text);
+    await prefs.setString('email', _emailController.text);
     await prefs.setString('password', _passwordController.text);
   }
 
@@ -87,10 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
         body: jsonEncode({
           'namaPengguna': _namaPenggunaController.text,
           'nama': _namaController.text,
-          'usia': _usiaController.text,
-          'tanggalLahir': _tanggalLahirController.text,
-          'alamat': _alamatController.text,
-          'noHp': _noHpController.text,
+          'email': _emailController.text,
           'password': _passwordController.text,
         }),
       );
@@ -112,12 +99,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _toggleEdit() {
-    setState(() {
-      _isEditing = !_isEditing;
-    });
-  }
-
   Widget _buildProfileItem(
       String hint, TextEditingController controller, IconData icon,
       {bool obscureText = false}) {
@@ -134,53 +115,15 @@ class _ProfilePageState extends State<ProfilePage> {
             Icon(icon, color: pinkColor),
             const SizedBox(width: 12),
             Expanded(
-              child: _isEditing
-                  ? TextField(
-                      controller: controller,
-                      obscureText: obscureText,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: hint,
-                        hintStyle: const TextStyle(color: Colors.black54),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        controller.text,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(String label, IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(top: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: pinkColor),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+              child: TextField(
+                controller: controller,
+                obscureText: obscureText,
+                style: const TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hint,
+                  hintStyle: const TextStyle(color: Colors.black54),
+                ),
               ),
             ),
           ],
@@ -232,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 24),
             Center(
               child: GestureDetector(
-                onTap: _isEditing ? _pickImage : null,
+                onTap: _pickImage,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -243,17 +186,15 @@ class _ProfilePageState extends State<ProfilePage> {
                           : const AssetImage("assets/images/profile.png")
                               as ImageProvider,
                     ),
-                    if (_isEditing)
-                      Positioned(
-                        bottom: 0,
-                        right: 4,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 18,
-                          child: Icon(Icons.camera_alt,
-                              color: pinkColor, size: 20),
-                        ),
+                    Positioned(
+                      bottom: 0,
+                      right: 4,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 18,
+                        child: Icon(Icons.camera_alt, color: pinkColor, size: 20),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -282,54 +223,73 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 10),
-            _buildActionButton("Edit Profile", Icons.edit, _toggleEdit),
-            if (_isEditing) ...[
-              _buildProfileItem("Nama Pengguna", _namaPenggunaController,
-                  Icons.alternate_email),
-              _buildProfileItem("Nama Lengkap", _namaController, Icons.person),
-              _buildProfileItem("Usia", _usiaController, Icons.cake),
-              _buildProfileItem(
-                  "Tanggal Lahir", _tanggalLahirController, Icons.event),
-              _buildProfileItem("Alamat", _alamatController, Icons.location_on),
-              _buildProfileItem("Nomor HP", _noHpController, Icons.phone),
-              _buildProfileItem("Kata Sandi", _passwordController, Icons.lock,
-                  obscureText: true),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () async {
-                  final responseJson = await updateProfileOnServer();
+            _buildProfileItem("Nama Pengguna", _namaPenggunaController,
+                Icons.alternate_email),
+            _buildProfileItem("Nama Lengkap", _namaController, Icons.person),
+            _buildProfileItem("Email", _emailController, Icons.email),
+            _buildProfileItem("Kata Sandi", _passwordController, Icons.lock,
+                obscureText: true),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () async {
+                final responseJson = await updateProfileOnServer();
 
-                  if (responseJson['status'] == 'success') {
-                    await _saveProfileData();
-                    setState(() {
-                      _isEditing = false;
-                    });
-                  }
-
+                if (responseJson['status'] == 'success') {
+                  await _saveProfileData();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Profil berhasil diperbarui')),
+                  );
+                } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content:
-                            Text(responseJson['message'] ?? 'Tidak ada pesan')),
+                            Text(responseJson['message'] ?? 'Terjadi kesalahan')),
                   );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: pinkColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: pinkColor,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child:
-                    const Text("Simpan", style: TextStyle(color: Colors.white)),
               ),
-              const SizedBox(height: 16),
-            ],
-            _buildActionButton("Log Out", Icons.logout, () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
-              Navigator.pushReplacementNamed(context, '/main.dart');
-            }),
+              child:
+                  const Text("Simpan", style: TextStyle(color: Colors.white)),
+            ),
+            const SizedBox(height: 24),
+            GestureDetector(
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                Navigator.pushReplacementNamed(context, '/main.dart');
+              },
+              child: Container(
+                margin: const EdgeInsets.only(top: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.logout, color: pinkColor),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Log Out",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
           ],
         ),

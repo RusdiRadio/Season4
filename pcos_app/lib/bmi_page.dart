@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class BMICalculatorPage extends StatefulWidget {
   const BMICalculatorPage({super.key});
@@ -70,8 +71,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
               _buildTextField(
                   _heightController, 'Tinggi badan (cm)', Icons.height),
               const SizedBox(height: 16),
-              _buildTextField(
-                  _weightController, 'Berat badan (kg)', Icons.fitness_center),
+              _buildTextField(_weightController, 'Berat badan (kg)',
+                  Icons.fitness_center),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _calculateBMI,
@@ -112,6 +113,53 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                         color: Colors.black,
                       ),
                     ),
+                    const SizedBox(height: 24),
+                    SfRadialGauge(
+                      axes: <RadialAxis>[
+                        RadialAxis(
+                          minimum: 10,
+                          maximum: 40,
+                          ranges: <GaugeRange>[
+                            GaugeRange(
+                                startValue: 10,
+                                endValue: 18.5,
+                                color: Colors.blue), // Kurus
+                            GaugeRange(
+                                startValue: 18.5,
+                                endValue: 24.9,
+                                color: Colors.green), // Normal
+                            GaugeRange(
+                                startValue: 25,
+                                endValue: 29.9,
+                                color: Colors.orange), // Gemuk
+                            GaugeRange(
+                                startValue: 30,
+                                endValue: 40,
+                                color: Colors.red), // Obesitas
+                          ],
+                          pointers: <GaugePointer>[
+                            NeedlePointer(
+                              value: _bmiResult!,
+                              needleColor: Colors.black,
+                              knobStyle: KnobStyle(color: Colors.black),
+                            )
+                          ],
+                          annotations: <GaugeAnnotation>[
+                            GaugeAnnotation(
+                              widget: Text(
+                                '${_bmiResult!.toStringAsFixed(1)}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              angle: 90,
+                              positionFactor: 0.75,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ],
                 )
               else if (_status.isNotEmpty)
@@ -138,8 +186,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
-        prefixIcon: Icon(icon,
-            color: const Color.fromARGB(255, 233, 30, 99)), // Pink
+        prefixIcon:
+            Icon(icon, color: const Color.fromARGB(255, 233, 30, 99)),
         labelStyle: GoogleFonts.poppins(
             fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
         enabledBorder: OutlineInputBorder(

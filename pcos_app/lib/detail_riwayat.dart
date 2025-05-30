@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'main.dart';
 
 class DetailRiwayat extends StatelessWidget {
   const DetailRiwayat({super.key});
@@ -26,7 +27,14 @@ class DetailRiwayat extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyHomePage()),
+                          (route) => false,
+                        );
+                      },
                     ),
                   ),
                   Center(

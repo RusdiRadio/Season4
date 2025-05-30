@@ -107,7 +107,7 @@ class _BottomNavBarState extends State<BottomNavBar>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(0, Icons.home_rounded, 'Home'),
-              _buildNavItem(1, Icons.notifications_active_rounded, 'Notifikasi'),
+              _buildNavItem(1, Icons.history_rounded, 'Riwayat'),
               _buildNavItem(2, Icons.monitor_weight_outlined, 'BMI'),
               _buildNavItem(3, Icons.person_rounded, 'Profil'),
             ],
@@ -171,7 +171,8 @@ class _BottomNavBarState extends State<BottomNavBar>
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFFD81B60).withOpacity(0.3),
+                                    color: const Color(0xFFD81B60)
+                                        .withOpacity(0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                     spreadRadius: 0,
@@ -182,8 +183,8 @@ class _BottomNavBarState extends State<BottomNavBar>
                         child: Icon(
                           icon,
                           size: 18,
-                          color: isSelected 
-                              ? Colors.white 
+                          color: isSelected
+                              ? Colors.white
                               : const Color.fromARGB(255, 255, 255, 255),
                         ),
                       ),
@@ -195,9 +196,10 @@ class _BottomNavBarState extends State<BottomNavBar>
                         duration: const Duration(milliseconds: 200),
                         style: TextStyle(
                           fontSize: isSelected ? 11 : 10,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                          color: isSelected 
-                              ? const Color(0xFFD81B60) 
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                          color: isSelected
+                              ? const Color(0xFFD81B60)
                               : const Color.fromARGB(255, 255, 255, 255),
                           letterSpacing: 0.3,
                         ),
@@ -216,7 +218,8 @@ class _BottomNavBarState extends State<BottomNavBar>
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFFD81B60).withOpacity(0.4),
+                                    color: const Color(0xFFD81B60)
+                                        .withOpacity(0.4),
                                     blurRadius: 4,
                                     spreadRadius: 1,
                                   ),

@@ -11,9 +11,10 @@ import 'tentang.dart';
 import 'prediksi_page.dart';
 
 // Halaman tambahan
-import 'notif_page.dart';
+import 'detail_riwayat.dart';
 import 'bmi_page.dart';
 import 'profile_page.dart';
+import 'notif_page.dart'; // Tambahkan ini
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    NotifPage(),
+    DetailRiwayat(),
     BMICalculatorPage(),
     ProfilePage(),
     PrediksiPage(),
@@ -150,6 +151,19 @@ class HomePage extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications_none,
+                          color: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotifPage()),
+                        );
+                      },
                     ),
                   ),
                 ],

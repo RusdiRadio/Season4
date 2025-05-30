@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'detail_riwayat.dart'; // Import halaman tujuan
 
 class RiwayatBar extends StatelessWidget {
   const RiwayatBar({super.key});
@@ -11,7 +10,7 @@ class RiwayatBar extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
       height: 130,
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.1), // Warna tetap sesuai permintaan
+        color: Colors.grey.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -23,9 +22,9 @@ class RiwayatBar extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: const [
           Row(
-            children: const [
+            children: [
               Icon(
                 Icons.assignment_turned_in_outlined,
                 color: Color.fromARGB(255, 233, 30, 99),
@@ -42,45 +41,12 @@ class RiwayatBar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          const Text(
+          SizedBox(height: 6),
+          Text(
             'Lihat ringkasan atau detail riwayat pemeriksaan Anda.',
             style: TextStyle(
               fontSize: 13,
               color: Colors.black87,
-            ),
-          ),
-          const Spacer(),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                // Navigasi ke halaman detail
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DetailRiwayat(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.history, size: 18, color: Colors.white),
-              label: const Text(
-                'Riwayat',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 233, 30, 99),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                elevation: 2,
-              ),
             ),
           ),
         ],
