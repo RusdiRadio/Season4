@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\PrediksiController;
 use App\Http\Controllers\VisualisasiController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\ExportController;
+
 
 
 
@@ -57,10 +59,13 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     // Data User
     Route::get('/dataUser', [PenggunaController::class, 'index'])->name('dataUser');
     Route::get('/data-user', [PenggunaController::class, 'index'])->name('dataUser.index');
+    
 
 
     // Riwayat
-Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+    Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+    Route::get('/export/excel', [ExportController::class, 'exportExcel']);
+    Route::get('/export/pdf', [ExportController::class, 'exportPDF']);
 
     // visualisasi
     Route::get('/visualisasi', fn() => view('visualisasi'))->name('visualisasi');
@@ -96,10 +101,10 @@ Route::get('/Riwayat', [RiwayatController::class, 'index'])->name('riwayat');
 
 });
 
-Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-// Menampilkan form reset password (dari link email)
-Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    // Menampilkan form reset password (dari link email)
+    Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
-// Menangani submit form reset password
-Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+    // Menangani submit form reset password
+    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');

@@ -19,8 +19,6 @@
             <div class="card-body">
               <h5 class="card-title">Tabel Data User </h5>
               <div class="mb-3">
-              <a href="/export/excel" class="btn btn-success"><i class="fa fa-file-excel"></i> Export to Excel</a>
-              <a href="/export/pdf" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Export to PDF</a>
             </div>
 
               <!-- Bordered Table -->
