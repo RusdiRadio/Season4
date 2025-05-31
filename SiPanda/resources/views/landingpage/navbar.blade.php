@@ -14,8 +14,7 @@
                 <div class="navbar-nav mx-auto py-0">
                     <a href="{{ url('/') }}" class="nav-item nav-link {{ request()->is('/') ? 'active' : '' }}">Home</a>
                     <a href="{{ route('tentang') }}" class="nav-item nav-link {{ request()->is('tentang') ? 'active' : '' }}">Tentang</a>
-                    <a href="{{ route('pengenalan') }}" class="nav-item nav-link {{ request()->is('pengenalan') ? 'active' : '' }}">Pengenalan PCOS</a>
-                    <a href="{{ route('edukasii') }}" class="nav-item nav-link {{ request()->is('edukasii') ? 'active' : '' }}">Edukasi</a>
+                    <a href="{{ route('edukasii') }}" class="nav-item nav-link {{ request()->is('edukasii') ? 'active' : '' }}">Info & Edukasi PCOS</a>
 
 
                     <!-- <div class="nav-item dropdown">

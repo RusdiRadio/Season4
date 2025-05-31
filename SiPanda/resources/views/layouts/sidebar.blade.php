@@ -43,9 +43,9 @@
 
       
       <li class="nav-item">
-      <a class="nav-link {{ request()->routeIs('edukasi') ? 'active' : 'collapsed' }}" href="{{ route('edukasi') }}">
+      <a class="nav-link {{ request()->routeIs('info-edukasi') ? 'active' : 'collapsed' }}" href="{{ route('info-edukasi') }}">
       <i class="bi bi-book"></i>
-          <span>Manajemen Edukasi </span>
+          <span>Info PCOS & edukasi </span>
         </a>
       </li><!-- End data User Page Nav -->
 

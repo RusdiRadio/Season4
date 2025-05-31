@@ -12,6 +12,10 @@ use App\Http\Controllers\PrediksiController;
 use App\Http\Controllers\VisualisasiController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\InfoController;
+use App\Http\Controllers\InfoEdukasiController;
+use App\Http\Controllers\LandingpageController;
+
 
 
 
@@ -31,13 +35,11 @@ Route::get('/index', fn() => view('landingpage.index'))->name('index');
 Route::get('/tentang', function () {
     return view('landingpage.tentang');
 })->name('tentang');
-
 Route::get('/pengenalan', function () {
     return view('landingpage.pengenalan');
 })->name('pengenalan');
-Route::get('/edukasii', function () {
-    return view('landingpage.edukasii');
-})->name('edukasii');
+Route::get('/edukasii', [LandingpageController::class, 'edukasiAll'])->name('edukasii');
+
 
 // Registration
 // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -70,13 +72,26 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     // visualisasi
     Route::get('/visualisasi', fn() => view('visualisasi'))->name('visualisasi');
 
+    Route::get('/info-edukasi', [InfoEdukasiController::class, 'index'])->name('info-edukasi');
+
     // CRUD Edukasi
-    Route::get('/edukasi', [EdukasiController::class, 'index'])->name('edukasi');
+    Route::get('/edukasi', [InfoEdukasiController::class, 'index'])->name('edukasi');
     Route::get('/tambahedukasi', [EdukasiController::class, 'tambah'])->name('tambahedukasi');
     Route::post('/tambahedukasi/store', [EdukasiController::class, 'store'])->name('tambahedukasi.store');
     Route::get('/EditEdukasi/{id}', [EdukasiController::class, 'edit'])->name('EditEdukasi');
     Route::put('/UpdateEdukasi/{id}', [EdukasiController::class, 'update'])->name('UpdateEdukasi');
     Route::get('/hapusedukasi/{id}', [EdukasiController::class, 'destroy'])->name('HapusEdukasi');
+    Route::get('/edukasi/{id}', [EdukasiController::class, 'show']);
+
+
+    //CRUD Info
+    Route::get('/edukasi', [InfoEdukasiController::class, 'index'])->name('edukasi');
+    Route::get('/info/tambah', [InfoController::class, 'tambah'])->name('tambahinfo');
+    Route::post('/info/store', [InfoController::class, 'store'])->name('tambahinfo.store');
+    Route::get('/info/edit/{id_info}', [InfoController::class, 'edit'])->name('editinfo');
+    Route::put('/info/update/{id}', [InfoController::class, 'update'])->name('updateinfo');
+    Route::delete('/info/delete/{id}', [InfoController::class, 'destroy'])->name('deleteinfo');
+
 
     // Pengaturan
     Route::get('/pengaturan', fn() => view('pengaturan'))->name('pengaturan');
