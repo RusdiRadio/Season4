@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EdukasiController;
 // use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\AdminProfileController; // <-- ini yang kurang
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\Api\PenggunaController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\PrediksiController;
@@ -98,6 +100,14 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
     // Prediksi
     Route::get('/prediksi', [PrediksiController::class, 'index'])->name('prediksi');
+    Route::get('/edukasi-pcos', function() {
+    // Ambil semua data dari tabel info
+    $edukasi = DB::table('info')->get();
+
+    // Kembalikan data dalam format JSON
+    return response()->json($edukasi);
+});
+
 
     //route visualisasi
     Route::get('/visualisasi', [VisualisasiController::class, 'index'])->name('visualisasi');
@@ -119,7 +129,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     // Menampilkan form reset password (dari link email)
-    Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 
     // Menangani submit form reset password
-    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+    Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');

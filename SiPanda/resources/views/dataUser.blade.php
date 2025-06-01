@@ -26,22 +26,18 @@
               <thead>
                 <tr>
                   <th scope="col" class="text-center">No</th>
-                  <th scope="col">ID</th>
                   <th scope="col">Nama</th>
                   <th scope="col">Username</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Password</th>
                 </tr>
               </thead>
               <tbody>
               @forelse ($pengguna as $index => $user)
                 <tr>
                   <td>{{ $index + 1 }}</td>
-                  <td>{{ $user->id_user }}</td>
                   <td>{{ $user->nama }}</td>
                   <td>{{ $user->username }}</td>
                   <td>{{ $user->email }}</td>
-                  <td>{{ \Illuminate\Support\Str::limit($user->password, 20, '...') }}</td>
                 </tr>
               @empty
                 <tr>

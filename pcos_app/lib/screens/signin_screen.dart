@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pcos_app/screens/signup_screen.dart'; // Ganti sesuai struktur project-mu
 import '/widgets/custom_scaffold.dart';
 import 'package:pcos_app/main.dart';
@@ -20,6 +21,35 @@ class _SignInScreenState extends State<SignInScreen> {
   bool rememberPassword = true;
   bool _obscurePassword = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginInfo();
+  }
+
+  // Muat data yang disimpan
+  Future<void> _loadLoginInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedUsername = prefs.getString('username');
+    final savedPassword = prefs.getString('password');
+
+    if (savedUsername != null && savedPassword != null) {
+      _usernameController.text = savedUsername;
+      _passwordController.text = savedPassword;
+      setState(() {
+        rememberPassword = true;
+      });
+    }
+  }
+
+  // Simpan data login
+  Future<void> _saveLoginInfo(String username, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
+    await prefs.setBool('isLoggedIn', true);
+  }
+
   Future<void> _loginUser() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
@@ -35,9 +65,14 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
       if (response.statusCode == 200) {
+        if (rememberPassword) {
+          await _saveLoginInfo(username, password);
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login berhasil!')),
         );
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -47,7 +82,8 @@ class _SignInScreenState extends State<SignInScreen> {
         final res = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}')),
+            content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}'),
+          ),
         );
       }
     } catch (e) {
@@ -182,16 +218,17 @@ class _SignInScreenState extends State<SignInScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              _loginUser();
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Please agree to the processing of personal data'),
-                                ),
-                              );
+                            if (_formSignInKey.currentState!.validate()) {
+                              if (rememberPassword) {
+                                _loginUser();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Please agree to the processing of personal data'),
+                                  ),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -223,7 +260,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignUpScreen()),
+                                    builder: (context) =>
+                                        const SignUpScreen()),
                               );
                             },
                             child: Text(

@@ -29,8 +29,6 @@
   <thead>
     <tr>
       <th scope="col">No</th>
-      <th scope="col">Id Riwayat</th>
-      <th scope="col">Id User</th>
       <th scope="col">Nama</th>
       <th scope="col">Umur</th>
       <th scope="col">Tanggal Diagnosa</th>
@@ -41,8 +39,6 @@
     @foreach($riwayat as $r)
       <tr>
         <td>{{ $loop->iteration }}</td>
-        <td>{{ $r->id_riwayat }}</td>
-        <td>{{ $r->id_user }}</td>
         <td>{{ $r->nama }}</td>
         <td>{{ $r->umur }}</td>
         <td>{{ $r->tanggal_diagnosa }}</td>

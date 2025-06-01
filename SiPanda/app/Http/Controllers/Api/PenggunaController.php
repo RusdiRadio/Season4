@@ -28,11 +28,26 @@ class PenggunaController extends Controller
     }
 
     public function show($id)
-    {
-        $pengguna = Pengguna::findOrFail($id);
-        return response()->json($pengguna, 200);
+{
+    $pengguna = Pengguna::find($id);
+
+    if (!$pengguna) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Pengguna tidak ditemukan'
+        ], 404);
     }
 
+    return response()->json([
+        'status' => 'success',
+        'data' => [
+            'id' => $pengguna->id,
+            'username' => $pengguna->username,
+            'nama' => $pengguna->nama,
+            'email' => $pengguna->email
+        ]
+    ], 200);
+}
     public function update(UpdatePenggunaRequest $request, $id)
     {
         $pengguna = Pengguna::findOrFail($id);
