@@ -8,13 +8,15 @@ class TanggalHaid extends StatefulWidget {
   State<TanggalHaid> createState() => _TanggalHaidState();
 }
 
-class _TanggalHaidState extends State<TanggalHaid>
-    with TickerProviderStateMixin {
+class _TanggalHaidState extends State<TanggalHaid> with TickerProviderStateMixin {
   DateTime? selectedHaidDate;
   late AnimationController _fadeController;
   late AnimationController _scaleController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+
+  final int periodLength = 7; // Lama haid 7 hari
+  final int cycleLength = 28; // Siklus haid 28 hari
 
   @override
   void initState() {
@@ -47,18 +49,29 @@ class _TanggalHaidState extends State<TanggalHaid>
     super.dispose();
   }
 
+  /// Cek apakah [date] masuk dalam periode haid sekarang atau periode haid berikutnya berdasarkan siklus
+  bool isInPeriod(DateTime date) {
+    if (selectedHaidDate == null) return false;
+
+    DateTime start = selectedHaidDate!;
+    DateTime end = start.add(Duration(days: periodLength - 1));
+
+    // Cek beberapa siklus ke depan dan ke belakang (misal 6 siklus)
+    for (int i = -6; i <= 6; i++) {
+      DateTime cycleStart = start.add(Duration(days: cycleLength * i));
+      DateTime cycleEnd = cycleStart.add(Duration(days: periodLength - 1));
+
+      if (!date.isBefore(cycleStart) && !date.isAfter(cycleEnd)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final dateFormat = DateFormat('EEEE, d MMMM y', 'id_ID');
-
-    bool isHaid(DateTime date) {
-      if (selectedHaidDate == null) return false;
-      final endHaid = selectedHaidDate!.add(const Duration(days: 6));
-      return date
-              .isAfter(selectedHaidDate!.subtract(const Duration(days: 1))) &&
-          date.isBefore(endHaid.add(const Duration(days: 1)));
-    }
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -68,14 +81,11 @@ class _TanggalHaidState extends State<TanggalHaid>
 
           const SizedBox(height: 8),
 
-          // Premium Date Picker Button
+          // Tombol Pilih Tanggal Haid
           ScaleTransition(
             scale: _scaleAnimation,
             child: GestureDetector(
               onTap: () async {
-                // Haptic feedback
-                // HapticFeedback.lightImpact();
-
                 final pickedDate = await showDatePicker(
                   context: context,
                   initialDate: selectedHaidDate ?? DateTime.now(),
@@ -135,6 +145,14 @@ class _TanggalHaidState extends State<TanggalHaid>
                             if (states.contains(MaterialState.selected)) {
                               return const Color(0xFFD81B60);
                             }
+
+                            // Tandai tanggal haid dengan background merah muda
+                            DateTime date = DateTime.now();
+
+                            // Ambil tanggal dari state datepicker (belum ada akses langsung)
+                            // Jadi kita harus override ini nanti dengan custom calendar jika ingin warna di calendar picker
+                            // Untuk sekarang, warna hanya di card hari ini
+
                             return null;
                           }),
                           shape: const RoundedRectangleBorder(
@@ -246,7 +264,7 @@ class _TanggalHaidState extends State<TanggalHaid>
 
           const SizedBox(height: 24),
 
-          // Premium Status Card
+          // Card Status Hari Ini
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 24),
             width: double.infinity,
@@ -278,17 +296,64 @@ class _TanggalHaidState extends State<TanggalHaid>
               child: _buildLuxuryTanggalTile(
                 "Hari Ini",
                 dateFormat.format(now),
-                isHaid(now),
+                isInPeriod(now),
               ),
             ),
           ),
+
+          const SizedBox(height: 24),
+
+          // Tampilkan daftar tanggal haid perkiraan beberapa siklus ke depan (contoh 3 siklus)
+          if (selectedHaidDate != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Perkiraan Periode Haid Berikutnya",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...List.generate(3, (index) {
+                    DateTime cycleStart =
+                        selectedHaidDate!.add(Duration(days: cycleLength * (index + 1)));
+                    DateTime cycleEnd = cycleStart.add(Duration(days: periodLength - 1));
+
+                    String periodText =
+                        "${DateFormat('d MMM').format(cycleStart)} - ${DateFormat('d MMM').format(cycleEnd)}";
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFCE4EC),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFD81B60)),
+                      ),
+                      child: Text(
+                        "Siklus ${index + 1}: $periodText",
+                        style: const TextStyle(
+                          color: Color(0xFFD81B60),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildLuxuryTanggalTile(
-      String label, String tanggal, bool isHaidFase) {
+  Widget _buildLuxuryTanggalTile(String label, String tanggal, bool isHaidFase) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -315,7 +380,7 @@ class _TanggalHaidState extends State<TanggalHaid>
               ),
             ],
           ),
-          child: Icon(
+          child: const Icon(
             Icons.today_rounded,
             color: Colors.white,
             size: 18,
@@ -324,7 +389,7 @@ class _TanggalHaidState extends State<TanggalHaid>
 
         const SizedBox(width: 14),
 
-        // Date Information
+        // Texts
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,68 +397,36 @@ class _TanggalHaidState extends State<TanggalHaid>
               Text(
                 label,
                 style: TextStyle(
-                  color:
-                      isHaidFase ? const Color(0xFFD81B60) : Colors.grey[600],
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
+                  color: isHaidFase ? const Color(0xFFD81B60) : Colors.grey[700],
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 tanggal,
                 style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 18,
                   fontWeight: FontWeight.w400,
-                  letterSpacing: 0.3,
+                  fontSize: 14,
+                  color: isHaidFase ? const Color(0xFFD81B60) : Colors.grey[600],
                 ),
               ),
             ],
           ),
         ),
 
-        // Status Badge
+        // Icon show if haid fase
         if (isHaidFase)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD81B60), Color(0xFFAD1457)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFD81B60).withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              color: const Color(0xFFD81B60).withOpacity(0.15),
+              shape: BoxShape.circle,
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  "Fase Haid",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
+            child: const Icon(
+              Icons.bloodtype_rounded,
+              color: Color(0xFFD81B60),
+              size: 20,
             ),
           ),
       ],

@@ -12,7 +12,13 @@ class _PrediksiPageState extends State<PrediksiPage> {
   final List<Map<String, dynamic>> _dataList = [];
 
   final TextEditingController _usiaController = TextEditingController();
-  final TextEditingController _lingkarController = TextEditingController();
+  final TextEditingController _beratController = TextEditingController();
+  final TextEditingController _tinggiController = TextEditingController();
+  final TextEditingController _bmiController = TextEditingController();
+  final TextEditingController _lingkarPinggangController =
+      TextEditingController();
+  final TextEditingController _lingkarPanggulController =
+      TextEditingController();
 
   String? _rambut;
   String? _beratBadan;
@@ -27,10 +33,16 @@ class _PrediksiPageState extends State<PrediksiPage> {
 
   void _addData() {
     if (_formKey.currentState!.validate()) {
+      String bmi = _bmiController.text;
+
       setState(() {
         _dataList.add({
           'usia': _usiaController.text,
-          'lingkar': _lingkarController.text,
+          'berat': _beratController.text,
+          'tinggi': _tinggiController.text,
+          'bmi': bmi,
+          'lingkar_pinggang': _lingkarPinggangController.text,
+          'lingkar_panggul': _lingkarPanggulController.text,
           'rambut': _rambut,
           'kenaikan_berat': _beratBadan,
           'rambut_tidak_wajar': _rambutTidakWajar,
@@ -42,7 +54,11 @@ class _PrediksiPageState extends State<PrediksiPage> {
         });
 
         _usiaController.clear();
-        _lingkarController.clear();
+        _beratController.clear();
+        _tinggiController.clear();
+        _bmiController.clear();
+        _lingkarPinggangController.clear();
+        _lingkarPanggulController.clear();
         _rambut = null;
         _beratBadan = null;
         _rambutTidakWajar = null;
@@ -67,7 +83,9 @@ class _PrediksiPageState extends State<PrediksiPage> {
       controller: controller,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
-        prefixIcon: icon != null ? Icon(icon, color: Color.fromARGB(255, 233, 30, 99)) : null,
+        prefixIcon: icon != null
+            ? Icon(icon, color: const Color.fromARGB(255, 233, 30, 99))
+            : null,
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
@@ -77,16 +95,21 @@ class _PrediksiPageState extends State<PrediksiPage> {
           borderSide: BorderSide.none,
         ),
       ),
-      validator: (value) => value == null || value.isEmpty ? 'Tidak boleh kosong' : null,
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Tidak boleh kosong' : null,
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
     );
   }
 
-  Widget _buildDropdownField(String label, String? value, Function(String?) onChanged,
+  Widget _buildDropdownField(
+      String label, String? value, Function(String?) onChanged,
       {IconData? icon}) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(
-        prefixIcon: icon != null ? Icon(icon, color: Color.fromARGB(255, 233, 30, 99)) : null,
+        prefixIcon: icon != null
+            ? Icon(icon, color: const Color.fromARGB(255, 233, 30, 99))
+            : null,
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
@@ -138,31 +161,76 @@ class _PrediksiPageState extends State<PrediksiPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          _buildInputField("Usia (tahun)", _usiaController, icon: Icons.cake),
+                          _buildInputField("Usia (tahun)", _usiaController,
+                              icon: Icons.cake),
+                          const SizedBox(height: 12),
+                          _buildInputField("Berat badan (kg)", _beratController,
+                              suffix: const Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text("kg",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                              icon: Icons.monitor_weight),
                           const SizedBox(height: 12),
                           _buildInputField(
-                            "Lingkar pinggang & panggul",
-                            _lingkarController,
+                              "Tinggi badan (cm)", _tinggiController,
+                              suffix: const Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text("cm",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                              icon: Icons.height),
+                          const SizedBox(height: 12),
+                          _buildInputField(
+                            "BMI (diisi manual)",
+                            _bmiController,
                             suffix: const Padding(
                               padding: EdgeInsets.only(right: 10),
-                              child: Text("cm", style: TextStyle(color: Colors.grey)),
+                              child: Text("kg/m²",
+                                  style: TextStyle(color: Colors.grey)),
                             ),
-                            icon: Icons.straighten,
+                            icon: Icons.fitness_center,
                           ),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Apakah Haid teratur?", _haidTeratur,
+                          _buildInputField("Lingkar pinggang (cm)",
+                              _lingkarPinggangController,
+                              suffix: const Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text("cm",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                              icon: Icons.straighten),
+                          const SizedBox(height: 12),
+                          _buildInputField(
+                              "Lingkar panggul (cm)", _lingkarPanggulController,
+                              suffix: const Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Text("cm",
+                                    style: TextStyle(color: Colors.grey)),
+                              ),
+                              icon: Icons.straighten),
+                          const SizedBox(height: 12),
+                          _buildDropdownField(
+                              "Apakah Haid teratur?",
+                              _haidTeratur,
                               (val) => setState(() => _haidTeratur = val),
                               icon: Icons.calendar_month),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Kenaikan berat badan", _beratBadan,
+                          _buildDropdownField(
+                              "Kenaikan berat badan",
+                              _beratBadan,
                               (val) => setState(() => _beratBadan = val),
                               icon: Icons.monitor_weight),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Pertumbuhan rambut tidak wajar", _rambutTidakWajar,
+                          _buildDropdownField(
+                              "Pertumbuhan rambut tidak wajar",
+                              _rambutTidakWajar,
                               (val) => setState(() => _rambutTidakWajar = val),
                               icon: Icons.face_retouching_natural),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Penggelapan kulit di area tidak wajar", _kulitGelap,
+                          _buildDropdownField(
+                              "Penggelapan kulit di area tidak wajar",
+                              _kulitGelap,
                               (val) => setState(() => _kulitGelap = val),
                               icon: Icons.dark_mode),
                           const SizedBox(height: 12),
@@ -174,78 +242,71 @@ class _PrediksiPageState extends State<PrediksiPage> {
                               (val) => setState(() => _jerawat = val),
                               icon: Icons.sick),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Makan makanan junk food?", _junkFood,
+                          _buildDropdownField(
+                              "Makan makanan junk food?",
+                              _junkFood,
                               (val) => setState(() => _junkFood = val),
                               icon: Icons.fastfood),
                           const SizedBox(height: 12),
-                          _buildDropdownField("Pertumbuhan rambut berlebih", _rambut,
-                              (val) => setState(() => _rambut = val),
+                          _buildDropdownField("Pertumbuhan rambut berlebih",
+                              _rambut, (val) => setState(() => _rambut = val),
                               icon: Icons.face),
-                          const SizedBox(height: 16),
-                          ElevatedButton.icon(
+                          const SizedBox(height: 20),
+                          ElevatedButton(
                             onPressed: _addData,
-                            icon: const Icon(Icons.add, color: Colors.white),
-                            label: const Text("Tambah Data", style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 233, 30, 99),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 233, 30, 99),
+                              minimumSize: const Size.fromHeight(50),
+                            ),
+                            child: Text(
+                              "Simpan",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
                             ),
                           ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
-                if (_dataList.isNotEmpty)
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 350),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Data Terkumpul:',
-                            style: TextStyle(fontSize: 18, color: Colors.black),
-                          ),
-                          const SizedBox(height: 12),
-                          ..._dataList.map((data) => Card(
-                                 color: Colors.grey.withOpacity(0.1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: ListTile(
-                                  title: Text("Usia: ${data['usia']}"),
-                                  subtitle: Text(
-                                    "Rambut berlebih: ${data['rambut']}\n"
-                                    "Lingkar: ${data['lingkar']} cm\n"
-                                    "Kenaikan berat: ${data['kenaikan_berat']}\n"
-                                    "Rambut tidak wajar: ${data['rambut_tidak_wajar']}\n"
-                                    "Kulit gelap: ${data['kulit_gelap']}\n"
-                                    "Kerontokan: ${data['kerontokan']}\n"
-                                    "Jerawat: ${data['jerawat']}\n"
-                                    "Junk food: ${data['junk_food']}\n"
-                                    "Haid Teratur: ${data['haid']}\n",
-                                  ),
-                                  isThreeLine: true,
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () {
-                                      setState(() {
-                                        _dataList.remove(data);
-                                      });
-                                    },
-                                  ),
-                                ),
-                              )),
-                        ],
-                      ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Data yang sudah dimasukkan:",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.pink.shade400,
                     ),
-                  )
-                else
-                  const Text(
-                    "Belum ada data yang dimasukkan.",
-                    style: TextStyle(color: Colors.black),
                   ),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _dataList.length,
+                  itemBuilder: (context, index) {
+                    final item = _dataList[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        title: Text(
+                            "Usia: ${item['usia']} tahun, Berat: ${item['berat']} kg, Tinggi: ${item['tinggi']} cm, BMI: ${item['bmi']}"),
+                        subtitle: Text(
+                            "Pinggang: ${item['lingkar_pinggang']} cm, Panggul: ${item['lingkar_panggul']} cm\n"
+                            "Haid teratur: ${item['haid']}, Berat badan naik: ${item['kenaikan_berat']}\n"
+                            "Rambut tidak wajar: ${item['rambut_tidak_wajar']}, Kulit gelap: ${item['kulit_gelap']}\n"
+                            "Kerontokan: ${item['kerontokan']}, Jerawat: ${item['jerawat']}\n"
+                            "Junk food: ${item['junk_food']}, Rambut berlebih: ${item['rambut']}"),
+                      ),
+                    );
+                  },
+                )
               ],
             ),
           ),
