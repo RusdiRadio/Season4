@@ -51,7 +51,11 @@ class AdminProfileController extends Controller
         $admin->pekerjaan = $request->input('pekerjaan');
         $admin->alamat = $request->input('alamat');
         $admin->no_hp = $request->input('no_hp');
-        $admin->save();
+        try {
+    $admin->save();
+} catch (\Exception $e) {
+    return back()->withErrors(['msg' => 'Error: ' . $e->getMessage()]);
+}
 
         return redirect()->route('pengaturan.index')->with('success', 'Profil berhasil diperbarui.');
     }

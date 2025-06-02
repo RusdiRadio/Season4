@@ -17,9 +17,9 @@ Route::post('/register', [PenggunaController::class, 'register']);
 Route::get('/pengguna/{id}', [PenggunaController::class, 'show']);
 Route::put('/pengguna/{id}', [PenggunaController::class, 'update']);
 
-// ENDPOINT TAMBAHAN UNTUK FLUTTER
-Route::get('/get-user/{id}', [PenggunaController::class, 'show']);
-Route::put('/update-profile/{id}', [PenggunaController::class, 'update']);
+    // ENDPOINT TAMBAHAN UNTUK FLUTTER
+    Route::get('/get-user/{id}', [PenggunaController::class, 'show']);
+    Route::put('/update-profile/{id}', [PenggunaController::class, 'update']);
 
-// PREDIKSI PCOS
-Route::post('/predict-pcos', [PcosController::class, 'predict']);
+    // PREDIKSI PCOS
+    Route::post('/predict-pcos', [PcosController::class, 'predict']);

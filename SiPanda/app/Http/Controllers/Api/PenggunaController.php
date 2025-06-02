@@ -41,7 +41,7 @@ class PenggunaController extends Controller
     return response()->json([
         'status' => 'success',
         'data' => [
-            'id' => $pengguna->id,
+            'id' => $pengguna->id_user,
             'username' => $pengguna->username,
             'nama' => $pengguna->nama,
             'email' => $pengguna->email
@@ -70,31 +70,35 @@ class PenggunaController extends Controller
 
     // ini login
     public function login(Request $request)
-    {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required'
-        ]);
+{
+    // Validasi input
+    $validator = Validator::make($request->all(), [
+        'username' => 'required',
+        'password' => 'required'
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
-
-        // Cek user
-        $user = Pengguna::where('username', $request->username)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Username atau password salah'], 401);
-        }
-
-        // Jika berhasil, kembalikan token (jika pakai Sanctum, Passport, atau bisa manual)
-        // Contoh manual tanpa token
-        return response()->json([
-            'message' => 'Login berhasil',
-            'user' => $user
-        ], 200);
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 422);
     }
+
+    // Cek user
+    $user = Pengguna::where('username', $request->username)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json(['error' => 'Username atau password salah'], 401);
+    }
+
+    // Kembalikan data user secara eksplisit tanpa token
+    return response()->json([
+        'message' => 'Login berhasil',
+        'user' => [
+            'id' => $user->id_user,
+            'username' => $user->username,
+            'name' => $user->nama,
+            // kalau perlu, tambahkan properti lain
+        ],
+    ], 200);
+}
 
     //ini untuk register
 
@@ -128,4 +132,6 @@ class PenggunaController extends Controller
         'user' => $pengguna,
     ], 201);
 }
+
 }
+

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pcos_app/screens/signup_screen.dart'; // Ganti sesuai struktur project-mu
+import 'package:pcos_app/screens/signup_screen.dart';
 import '/widgets/custom_scaffold.dart';
 import 'package:pcos_app/main.dart';
 import '../theme/theme.dart';
@@ -27,7 +27,6 @@ class _SignInScreenState extends State<SignInScreen> {
     _loadLoginInfo();
   }
 
-  // Muat data yang disimpan
   Future<void> _loadLoginInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final savedUsername = prefs.getString('username');
@@ -42,7 +41,6 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  // Simpan data login
   Future<void> _saveLoginInfo(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
@@ -51,12 +49,12 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _loginUser() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/api/login'), // Ganti sesuai IP PC kamu
+        Uri.parse('http://localhost:8000/api/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': username,
@@ -64,7 +62,34 @@ class _SignInScreenState extends State<SignInScreen> {
         }),
       );
 
+      print('Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('Decoded data: $data');
+
+        final user = data['user'];
+        if (user == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Login gagal: Data user tidak ditemukan')),
+          );
+          return;
+        }
+
+        final userId = user['id'];
+        if (userId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Login gagal: User ID tidak ditemukan')),
+          );
+          return;
+        }
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('userId', userId);
+
         if (rememberPassword) {
           await _saveLoginInfo(username, password);
         }
@@ -143,6 +168,12 @@ class _SignInScreenState extends State<SignInScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Username tidak boleh kosong';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 25.0),
                       TextFormField(
@@ -175,40 +206,31 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password tidak boleh kosong';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 25.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
-                                activeColor:
-                                    const Color.fromARGB(255, 114, 119, 255),
-                              ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(
-                                    color: Color.fromARGB(210, 164, 163, 163)),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // aksi lupa password
+                          Checkbox(
+                            value: rememberPassword,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                rememberPassword = value ?? true;
+                              });
                             },
-                            child: Text(
-                              'Forgot password?',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
+                            activeColor:
+                                const Color.fromARGB(255, 114, 119, 255),
+                          ),
+                          const Text(
+                            'Remember me',
+                            style: TextStyle(
+                              color: Color.fromARGB(210, 164, 163, 163),
                             ),
                           ),
                         ],
@@ -219,16 +241,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formSignInKey.currentState!.validate()) {
-                              if (rememberPassword) {
-                                _loginUser();
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data'),
-                                  ),
-                                );
-                              }
+                              _loginUser();
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -253,15 +266,17 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Don\'t have an account? ',
-                              style: TextStyle(color: Colors.black45)),
+                          const Text(
+                            'Don\'t have an account? ',
+                            style: TextStyle(color: Colors.black45),
+                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SignUpScreen()),
+                                  builder: (context) => const SignUpScreen(),
+                                ),
                               );
                             },
                             child: Text(

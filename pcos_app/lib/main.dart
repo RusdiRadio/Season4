@@ -153,19 +153,6 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.notifications_none,
-                          color: Colors.white),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const NotifPage()),
-                        );
-                      },
-                    ),
-                  ),
                 ],
               ),
             ),

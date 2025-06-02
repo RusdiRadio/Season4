@@ -260,7 +260,7 @@ class _PrediksiPageState extends State<PrediksiPage> {
                               minimumSize: const Size.fromHeight(50),
                             ),
                             child: Text(
-                              "Simpan",
+                              "Prediksi sekarang!",
                               style: GoogleFonts.poppins(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
