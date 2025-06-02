@@ -93,4 +93,4 @@ class PcosController extends Controller
     return response()->json(['error' => 'Gagal memproses prediksi dari Flask'], 500);
 }
 
-}
+} 
