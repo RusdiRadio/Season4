@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PenggunaController;
 use App\Http\Controllers\PcosController;
+use App\Http\Controllers\RiwayatController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -19,3 +20,6 @@ Route::put('/update-profile/{id}', [PenggunaController::class, 'update']);
 
 // PREDIKSI PCOS
 Route::post('/predict-pcos', [PcosController::class, 'predict']);
+
+
+Route::get('/riwayat/latest-status/{id_user}', [RiwayatController::class, 'getLatestStatusByUserId']);

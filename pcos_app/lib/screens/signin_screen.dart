@@ -31,6 +31,8 @@ class _SignInScreenState extends State<SignInScreen> {
     final prefs = await SharedPreferences.getInstance();
     final savedUsername = prefs.getString('username');
     final savedPassword = prefs.getString('password');
+    final savedNama = prefs.getString('nama');
+    final savedEmail = prefs.getString('email');
 
     if (savedUsername != null && savedPassword != null) {
       _usernameController.text = savedUsername;
@@ -39,13 +41,40 @@ class _SignInScreenState extends State<SignInScreen> {
         rememberPassword = true;
       });
     }
+    // savedNama dan savedEmail bisa kamu pakai kalau perlu, misal tampilkan profil
   }
 
-  Future<void> _saveLoginInfo(String username, String password) async {
+  Future<void> _saveLoginInfo(
+      String username, String password, String nama, String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setString('password', password);
+    await prefs.setString('nama', nama);
+    await prefs.setString('email', email);
     await prefs.setBool('isLoggedIn', true);
+  }
+
+  Future<String> _getLoginStatusAsJson() async {
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString('username');
+    final password = prefs.getString('password');
+    final nama = prefs.getString('nama');
+    final email = prefs.getString('email');
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final userId = prefs.getInt('userId');
+
+    final response = {
+      'isLoggedIn': isLoggedIn,
+      'hasSavedCredentials': username != null && password != null,
+      'username': username,
+      'password': password,
+      'nama': nama,
+      'email': email,
+      'userId': userId,
+      'userIdExists': userId != null,
+    };
+
+    return jsonEncode(response);
   }
 
   Future<void> _loginUser() async {
@@ -62,18 +91,15 @@ class _SignInScreenState extends State<SignInScreen> {
         }),
       );
 
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('Decoded data: $data');
-
         final user = data['user'];
+
         if (user == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Login gagal: Data user tidak ditemukan')),
+              content: Text('Login gagal: Data user tidak ditemukan'),
+            ),
           );
           return;
         }
@@ -82,21 +108,35 @@ class _SignInScreenState extends State<SignInScreen> {
         if (userId == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Login gagal: User ID tidak ditemukan')),
+              content: Text('Login gagal: User ID tidak ditemukan'),
+            ),
           );
           return;
         }
+
+        final nama =
+            user['name'] ?? ''; // Sesuaikan dengan key di respons backend
+        final email = user['email'] ?? '';
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setInt('userId', userId);
 
         if (rememberPassword) {
-          await _saveLoginInfo(username, password);
+          await _saveLoginInfo(username, password, nama, email);
+        } else {
+          await prefs.remove('username');
+          await prefs.remove('password');
+          await prefs.remove('nama');
+          await prefs.remove('email');
+          await prefs.setBool('isLoggedIn', false);
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login berhasil!')),
         );
+
+        final jsonStatus = await _getLoginStatusAsJson();
+        print('Login status (JSON): $jsonStatus');
 
         Navigator.pushAndRemoveUntil(
           context,
@@ -104,12 +144,20 @@ class _SignInScreenState extends State<SignInScreen> {
           (route) => false,
         );
       } else {
-        final res = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}'),
-          ),
-        );
+        try {
+          final res = jsonDecode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Login gagal: ${res['error'] ?? 'Unknown error'}'),
+            ),
+          );
+        } catch (_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login gagal: Respons tidak valid'),
+            ),
+          );
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -230,8 +278,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           const Text(
                             'Remember me',
                             style: TextStyle(
-                              color: Color.fromARGB(210, 164, 163, 163),
-                            ),
+                                color: Color.fromARGB(210, 164, 163, 163)),
                           ),
                         ],
                       ),

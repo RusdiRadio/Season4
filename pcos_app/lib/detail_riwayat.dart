@@ -23,20 +23,7 @@ class DetailRiwayat extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyHomePage()),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ),
+                  
                   Center(
                     child: Text(
                       'Detail Riwayat',

@@ -48,18 +48,53 @@ class PenggunaController extends Controller
         ]
     ], 200);
 }
-    public function update(UpdatePenggunaRequest $request, $id)
-    {
-        $pengguna = Pengguna::findOrFail($id);
-        $data = $request->validated();
+    public function update(Request $request, $id)
+{
+    // Cari user berdasarkan id
+    $user = Pengguna::findOrFail($id);
 
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
+    $request->validate([
+    'username' => 'required|string|max:255',
+    'nama'     => 'required|string|max:255',
+    'email'    => 'required|email|max:255',
+    'password' => 'nullable|string|min:8',
+    'foto'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // maks 2MB
+]);
 
-        $pengguna->update($data);
-        return response()->json($pengguna, 200);
+
+   // Update data user
+$user->username = $request->input('username');
+$user->nama     = $request->input('nama');
+$user->email    = $request->input('email');
+
+// Jika password diisi, update dan encrypt
+if ($request->filled('password')) {
+    $user->password = bcrypt($request->input('password'));
+}
+
+// Jika ada file foto di-upload, simpan
+if ($request->hasFile('foto')) {
+    $foto = $request->file('foto');
+    $namaFile = time() . '_' . $foto->getClientOriginalName();
+    $foto->move(public_path('uploads/profil'), $namaFile);
+
+    // Hapus foto lama jika ada
+    if ($user->foto && file_exists(public_path($user->foto))) {
+        unlink(public_path($user->foto));
     }
+
+    // Simpan path foto baru
+    $user->foto = 'uploads/profil/' . $namaFile;
+}
+
+$user->save();
+
+    $user->save();
+
+    // Kembalikan response JSON dengan data terbaru
+    return response()->json($user);
+}
+
 
     public function destroy($id)
     {
@@ -95,10 +130,12 @@ class PenggunaController extends Controller
             'id' => $user->id_user,
             'username' => $user->username,
             'name' => $user->nama,
+            'email' => $user->email,
             // kalau perlu, tambahkan properti lain
         ],
     ], 200);
 }
+
 
     //ini untuk register
 

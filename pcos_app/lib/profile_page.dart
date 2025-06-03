@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'login_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -14,18 +14,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  File? _profileImage;
-  final picker = ImagePicker();
-
   final TextEditingController _namaPenggunaController = TextEditingController();
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   final Color pinkColor = const Color.fromARGB(255, 233, 30, 99);
-
   bool _isLoading = true;
-  Map<String, dynamic>? _rawUserData;
 
   @override
   void initState() {
@@ -33,52 +28,32 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadProfileData();
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
-  }
-
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt('userId') ?? 0;
-    final url = Uri.parse('http://localhost/api/get-user/$userId');
+    final username = prefs.getString('username') ?? '';
+    final nama = prefs.getString('nama') ?? '';
+    final email = prefs.getString('email') ?? '';
 
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _namaPenggunaController.text = data['username'] ?? '';
-          _namaController.text = data['nama'] ?? '';
-          _emailController.text = data['email'] ?? '';
-          _passwordController.text = '';
-          _rawUserData = data;
-          _isLoading = false;
-        });
-      } else {
-        debugPrint('Gagal load profile, status: ${response.statusCode}');
-        setState(() => _isLoading = false);
-      }
-    } catch (e) {
-      debugPrint('Error saat load profile: $e');
-      setState(() => _isLoading = false);
-    }
+    setState(() {
+      _namaPenggunaController.text = username;
+      _namaController.text = nama;
+      _emailController.text = email;
+      _passwordController.text = '';
+      _isLoading = false;
+    });
   }
 
   Future<Map<String, dynamic>> updateProfileOnServer() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt('userId') ?? 0;
-    final url = Uri.parse('http://localhost/update-profile/$userId');
+    final url = Uri.parse('http://127.0.0.1:8000/api/update-profile/$userId');
 
     Map<String, dynamic> body = {
       'username': _namaPenggunaController.text,
       'nama': _namaController.text,
       'email': _emailController.text,
     };
+
     if (_passwordController.text.isNotEmpty) {
       body['password'] = _passwordController.text;
     }
@@ -91,11 +66,9 @@ class _ProfilePageState extends State<ProfilePage> {
       );
 
       if (response.statusCode == 200) {
-        final updatedData = jsonDecode(response.body);
-        // Update tampilan juga setelah update berhasil
-        setState(() {
-          _rawUserData = updatedData;
-        });
+        await prefs.setString('username', _namaPenggunaController.text);
+        await prefs.setString('nama', _namaController.text);
+        await prefs.setString('email', _emailController.text);
         return {'status': 'success'};
       } else {
         return {
@@ -109,8 +82,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildProfileItem(
-      String hint, TextEditingController controller, IconData icon,
-      {bool obscureText = false}) {
+    String hint,
+    TextEditingController controller,
+    IconData icon, {
+    bool obscureText = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
@@ -141,32 +117,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildRawDataBar(Map<String, dynamic>? rawData) {
-    if (rawData == null) return const SizedBox.shrink();
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.pink.shade300, width: 1.5),
-      ),
-      height: 80,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Text(
-          jsonEncode(rawData),
-          style: const TextStyle(
-            fontSize: 12,
-            fontFamily: 'Courier',
-            color: Colors.black87,
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,27 +130,15 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: const BoxDecoration(
             color: Color.fromARGB(255, 255, 118, 205),
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
-                ),
+          child: Center(
+            child: Text(
+              'Profil',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
-              Center(
-                child: Text(
-                  'Profil',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -210,30 +148,9 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 children: [
                   const SizedBox(height: 24),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundImage: _profileImage != null
-                              ? FileImage(_profileImage!)
-                              : const AssetImage("assets/images/profile.png")
-                                  as ImageProvider,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 4,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 18,
-                            child: Icon(Icons.camera_alt,
-                                color: pinkColor, size: 20),
-                          ),
-                        ),
-                      ],
-                    ),
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundImage: const AssetImage("assets/images/logo.png"),
                   ),
                   const SizedBox(height: 10),
                   Column(
@@ -260,24 +177,35 @@ class _ProfilePageState extends State<ProfilePage> {
                   _buildProfileItem(
                       "Nama Lengkap", _namaController, Icons.person),
                   _buildProfileItem("Email", _emailController, Icons.email),
-                  _buildProfileItem(
-                      "Kata Sandi", _passwordController, Icons.lock,
-                      obscureText: true),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_namaPenggunaController.text.isEmpty ||
+                          _namaController.text.isEmpty ||
+                          _emailController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text(
+                                  'Mohon lengkapi semua data terlebih dahulu')),
+                        );
+                        return;
+                      }
+
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) =>
+                            const Center(child: CircularProgressIndicator()),
+                      );
+
                       final responseJson = await updateProfileOnServer();
+                      Navigator.of(context).pop();
+
                       if (responseJson['status'] == 'success') {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Profil berhasil diperbarui')),
                         );
-                        setState(() {
-                          // Update tampilan nama pengguna dan nama langsung
-                          _namaPenggunaController.text =
-                              _namaPenggunaController.text;
-                          _namaController.text = _namaController.text;
-                        });
                         _passwordController.clear();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -300,7 +228,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(color: Colors.white)),
                   ),
                   const SizedBox(height: 12),
-                  _buildRawDataBar(_rawUserData),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      if (!mounted) return;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const WelcomeScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade400,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text("Logout",
+                        style: TextStyle(color: Colors.black)),
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),

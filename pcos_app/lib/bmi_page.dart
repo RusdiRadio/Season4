@@ -58,10 +58,6 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
             fontSize: 20,
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,8 +67,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
               _buildTextField(
                   _heightController, 'Tinggi badan (cm)', Icons.height),
               const SizedBox(height: 16),
-              _buildTextField(_weightController, 'Berat badan (kg)',
-                  Icons.fitness_center),
+              _buildTextField(
+                  _weightController, 'Berat badan (kg)', Icons.fitness_center),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _calculateBMI,
@@ -82,8 +78,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16, horizontal: 24),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 ),
                 child: Text(
                   'Hitung BMI',
@@ -186,8 +182,7 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
-        prefixIcon:
-            Icon(icon, color: const Color.fromARGB(255, 233, 30, 99)),
+        prefixIcon: Icon(icon, color: const Color.fromARGB(255, 233, 30, 99)),
         labelStyle: GoogleFonts.poppins(
             fontSize: 16, color: const Color.fromARGB(255, 0, 0, 0)),
         enabledBorder: OutlineInputBorder(
