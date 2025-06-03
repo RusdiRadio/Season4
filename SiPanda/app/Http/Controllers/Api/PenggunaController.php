@@ -133,9 +133,5 @@ class PenggunaController extends Controller
     ], 201);
 }
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 }
 

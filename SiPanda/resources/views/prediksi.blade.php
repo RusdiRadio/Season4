@@ -18,7 +18,9 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Tabel Prediksi</h5>
-
+        <div class="mb-3">
+           <a href="{{ route('export.prediksi.pdf') }}" class="btn btn-danger"><i class="fa fa-file-pdf"></i> Export to PDF</a>
+            </div>
         <table class="table table-bordered">
           <thead>
             <tr>

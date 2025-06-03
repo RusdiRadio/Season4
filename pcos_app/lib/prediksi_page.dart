@@ -31,7 +31,7 @@ class _PrediksiPageState extends State<PrediksiPage> {
   Future<void> _submitData() async {
     if (_formKey.currentState!.validate()) {
       final Map<String, dynamic> data = {
-        "id_user": 1, // Ganti sesuai kebutuhan
+        "id_user": 1,
         "nama": "Nama Pengguna",
         "Umur": int.parse(_usiaController.text),
         "Berat_kg": double.parse(_beratController.text),
@@ -50,10 +50,8 @@ class _PrediksiPageState extends State<PrediksiPage> {
 
       try {
         final response = await http.post(
-        Uri.parse("http://localhost:8000/api/predict-pcos"),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          Uri.parse("http://localhost:8000/api/predict-pcos"),
+          headers: {'Content-Type': 'application/json'},
           body: jsonEncode(data),
         );
 
@@ -62,19 +60,19 @@ class _PrediksiPageState extends State<PrediksiPage> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text("Hasil Prediksi"),
+              title: const Text("Hasil Prediksi"),
               content: Text("Status: ${result['prediction_result']['status']}\nEdukasi: ${result['prediction_result']['edukasi']}"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Gagal memproses prediksi dari server.")),
+            const SnackBar(content: Text("Gagal memproses prediksi dari server.")),
           );
         }
       } catch (e) {
@@ -85,19 +83,12 @@ class _PrediksiPageState extends State<PrediksiPage> {
     }
   }
 
-  Widget _buildInputField(
-    String label,
-    TextEditingController controller, {
-    Widget? suffix,
-    IconData? icon,
-  }) {
+  Widget _buildInputField(String label, TextEditingController controller, {Widget? suffix, IconData? icon}) {
     return TextFormField(
       controller: controller,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
-        prefixIcon: icon != null
-            ? Icon(icon, color: const Color.fromARGB(255, 233, 30, 99))
-            : null,
+        prefixIcon: icon != null ? Icon(icon, color: Color.fromARGB(255, 233, 30, 99)) : null,
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
@@ -112,18 +103,11 @@ class _PrediksiPageState extends State<PrediksiPage> {
     );
   }
 
-  Widget _buildDropdownField(
-    String label,
-    String? value,
-    Function(String?) onChanged, {
-    IconData? icon,
-  }) {
+  Widget _buildDropdownField(String label, String? value, Function(String?) onChanged, {IconData? icon}) {
     return DropdownButtonFormField<String>(
       value: value,
       decoration: InputDecoration(
-        prefixIcon: icon != null
-            ? Icon(icon, color: const Color.fromARGB(255, 233, 30, 99))
-            : null,
+        prefixIcon: icon != null ? Icon(icon, color: Color.fromARGB(255, 233, 30, 99)) : null,
         labelText: label,
         filled: true,
         fillColor: Colors.grey.withOpacity(0.1),
@@ -144,7 +128,7 @@ class _PrediksiPageState extends State<PrediksiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 118, 205),
         centerTitle: true,
@@ -211,88 +195,7 @@ class _PrediksiPageState extends State<PrediksiPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-<<<<<<< Updated upstream
-                          const SizedBox(height: 12),
-                          _buildInputField("Lingkar pinggang (cm)",
-                              _lingkarPinggangController,
-                              suffix: const Padding(
-                                padding: EdgeInsets.only(right: 10),
-                                child: Text("cm",
-                                    style: TextStyle(color: Colors.grey)),
-                              ),
-                              icon: Icons.straighten),
-                          const SizedBox(height: 12),
-                          _buildInputField(
-                              "Lingkar panggul (cm)", _lingkarPanggulController,
-                              suffix: const Padding(
-                                padding: EdgeInsets.only(right: 10),
-                                child: Text("cm",
-                                    style: TextStyle(color: Colors.grey)),
-                              ),
-                              icon: Icons.straighten),
-                          const SizedBox(height: 12),
-                          _buildDropdownField(
-                              "Apakah Haid teratur?",
-                              _haidTeratur,
-                              (val) => setState(() => _haidTeratur = val),
-                              icon: Icons.calendar_month),
-                          const SizedBox(height: 12),
-                          _buildDropdownField(
-                              "Kenaikan berat badan",
-                              _beratBadan,
-                              (val) => setState(() => _beratBadan = val),
-                              icon: Icons.monitor_weight),
-                          const SizedBox(height: 12),
-                          _buildDropdownField(
-                              "Pertumbuhan rambut tidak wajar",
-                              _rambutTidakWajar,
-                              (val) => setState(() => _rambutTidakWajar = val),
-                              icon: Icons.face_retouching_natural),
-                          const SizedBox(height: 12),
-                          _buildDropdownField(
-                              "Penggelapan kulit di area tidak wajar",
-                              _kulitGelap,
-                              (val) => setState(() => _kulitGelap = val),
-                              icon: Icons.dark_mode),
-                          const SizedBox(height: 12),
-                          _buildDropdownField("Kerontokan rambut", _rontok,
-                              (val) => setState(() => _rontok = val),
-                              icon: Icons.content_cut),
-                          const SizedBox(height: 12),
-                          _buildDropdownField("Jerawat", _jerawat,
-                              (val) => setState(() => _jerawat = val),
-                              icon: Icons.sick),
-                          const SizedBox(height: 12),
-                          _buildDropdownField(
-                              "Makan makanan junk food?",
-                              _junkFood,
-                              (val) => setState(() => _junkFood = val),
-                              icon: Icons.fastfood),
-                          const SizedBox(height: 12),
-                          _buildDropdownField("Pertumbuhan rambut berlebih",
-                              _rambut, (val) => setState(() => _rambut = val),
-                              icon: Icons.face),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: _addData,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 233, 30, 99),
-                              minimumSize: const Size.fromHeight(50),
-                            ),
-                            child: Text(
-                              "Prediksi sekarang!",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-=======
                         ),
->>>>>>> Stashed changes
                       ),
                     ],
                   ),

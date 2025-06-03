@@ -99,10 +99,13 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/pengaturan', fn() => view('pengaturan'))->name('pengaturan');
 
     // Prediksi
+    Route::get('/export/prediksi/pdf', [ExportController::class, 'exportPrediksiPDF'])->name('export.prediksi.pdf');
     Route::get('/prediksi', [PrediksiController::class, 'index'])->name('prediksi');
     Route::get('/edukasi-pcos', function() {
     // Ambil semua data dari tabel info
     $edukasi = DB::table('info')->get();
+
+    
 
     // Kembalikan data dalam format JSON
     return response()->json($edukasi);
